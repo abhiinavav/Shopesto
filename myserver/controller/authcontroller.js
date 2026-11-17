@@ -46,7 +46,7 @@ export const login = async (req,res) =>{
 
         res.cookie("token",token,{maxAge:60*60*1000})
 
-        res.status(200).json({message:"Login succesfull!!", success:false})
+        res.status(200).json({message:"Login succesfull!!", success:true})
 
     } catch (error) {
        

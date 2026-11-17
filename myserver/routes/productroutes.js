@@ -1,10 +1,11 @@
 
 import express from "express"
-import { addproduct } from "../controller/productcontroller.js";
+import { addproduct, getallprod } from "../controller/productcontroller.js";
 import middleware from "../middlewaree/usermiddleware.js";
 
 const productrouter = express.Router();
 
-productrouter.post("/add-products", middleware, addproduct)
+productrouter.post("/product", middleware, addproduct)
+productrouter.get("/product", getallprod)
 
 export default productrouter
