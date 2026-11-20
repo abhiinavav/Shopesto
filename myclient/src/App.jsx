@@ -10,6 +10,9 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Cart from './pages/Cart'
 import { Toaster } from 'react-hot-toast'
+import Admin from './pages/admin/Admin'
+import AdminProduct from './pages/admin/Adminproduct'
+
 
 const App = () => {
   return (
@@ -25,6 +28,9 @@ const App = () => {
 
             <Route path='/login' element={<Login/>}/>
             <Route path ='/register' element={<Register/>}/>
+            <Route path='/admin' element={<Admin/>}/>
+            <Route path ='/admin/products' element={<AdminProduct/>}/>
+
             
         </Routes>
 

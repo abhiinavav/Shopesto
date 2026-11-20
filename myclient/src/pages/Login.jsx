@@ -38,23 +38,29 @@ function Login() {
                 body: JSON.stringify(formData),
                 credentials: "include"
             });
-const data = await res.json();
+            const data = await res.json();
 
-console.log("Login Response:", data);
+            console.log("Login Response:", data);
 
-if (res.ok && data.success) {
+                 if (res.ok && data.success && data.user) {
 
-    toast.success("Login Successful!");
-
-    setTimeout(() => {
-        navigate("/product");
-    }, 1500);
-
+        // toast.success("Login Successful!");
+if (data.user.role === "admin") {
+    
+    toast.success("Signed in as ADMIN! 👑");
+    navigate("/admin");
 } else {
+    toast.success("Welcome back!");
+    navigate("/product");
+}
+
+}
+
+     else {
 
     toast.error(data.message || "Login failed!");
 
-}
+    }
 
 } catch (error) {
 

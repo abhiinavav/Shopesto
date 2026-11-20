@@ -7,9 +7,13 @@ import jwt from "jsonwebtoken"
 import cookieParser from 'cookie-parser';
 import cors from "cors"
 import cartrouter from './routes/cartroutes.js';
+import adminrouter from './routes/adminroutes.js';
+// import dns from "dns"
+
 dotenv.config();
 
 
+// dns.setServers(["8.8.8.8"])
 const app = express();
 
 app.use(express.json());
@@ -24,6 +28,7 @@ connectdb();
 app.use(router);
 app.use(productrouter);
 app.use(cartrouter);
+app.use(adminrouter)
 
 
 

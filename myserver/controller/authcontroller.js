@@ -1,6 +1,7 @@
 import User from "../models/usermodel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
+import Admin from "../models/adminmodel.js";
 
 export const register = async (req, res) => {
     try {
@@ -26,6 +27,49 @@ export const login = async (req,res) =>{
         
         const {email,password} = req.body
 
+
+         const admin = await Admin.findOne({ email });
+
+        if (admin) {
+
+            const auth = await bcrypt.compare(password, admin.password);
+
+            if (!auth) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Incorrect password!"
+                });
+            }
+
+            const token = jwt.sign(
+                {
+                    id: admin._id,
+                    email: admin.email,
+                    accountType: "admin"
+                },
+                process.env.JWT_SECRET,
+                { expiresIn: "1hr" }
+            );
+
+            res.cookie("token", token, {
+                httpOnly: true,
+                maxAge: 60 * 60 * 1000
+            });
+
+            return res.status(200).json({
+                success: true,
+                message: "Admin Login Successful!",
+                user: {
+                    name: admin.name,
+                    email: admin.email,
+                    role: "admin"
+                }
+            });
+        }
+
+
+
+
         const isExist = await User.findOne({email: email})
 
         if(! isExist){
@@ -38,7 +82,7 @@ export const login = async (req,res) =>{
             return res.status(404).json({success:false,message:"Incorrect password!!"})
         }
 
-        const token = jwt.sign({id: isExist._id, email: isExist.email,role: isExist.role},process.env.JWT_secret,
+        const token = jwt.sign({id: isExist._id, email: isExist.email,role: isExist.role},process.env.JWT_SECRET,
             {expiresIn:"1hr"}
         )
 
@@ -46,7 +90,15 @@ export const login = async (req,res) =>{
 
         res.cookie("token",token,{maxAge:60*60*1000})
 
-        res.status(200).json({message:"Login succesfull!!", success:true})
+       return res.status(200).json({
+    message: "Login successful!!",success: true,
+    user: {
+        name: isExist.name,
+        email: isExist.email,
+        role: "user"
+        }
+    });
+    
 
     } catch (error) {
        
