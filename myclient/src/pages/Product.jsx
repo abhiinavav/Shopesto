@@ -7,7 +7,7 @@ const Product = () => {
           const fetchprod =async()=>{
                 try {
           
-               const res = await fetch("https://shopesto-seven.vercel.app/product",{
+               const res = await fetch("https://shopesto.onrender.com/product",{
                     method: "GET",
                     credentials: "include"
                 })
