@@ -21,7 +21,7 @@ const UserProf = () => {
 
     const handleLogout = async () => {
         await logout();
-        navigate("/login");
+        navigate("/");
     };
 
     if (!user) {
