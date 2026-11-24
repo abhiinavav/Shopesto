@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
-import AuthContext from "./AuthContext.js";
+import AuthContext from "./Authcontext.js";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
