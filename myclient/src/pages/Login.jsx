@@ -3,12 +3,15 @@ import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import useAuth from "../context/useAuth";
 
 function Login() {
     const [showpassword, setshowpassword] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
+
+    const {login} = useAuth()
 
     const [formData, setFormData] = useState({
         email: "",
@@ -30,17 +33,19 @@ function Login() {
         try {
             setLoading(true);
 
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData),
-                credentials: "include"
-            });
-            const data = await res.json();
+            // const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json"
+            //     },
+            //     body: JSON.stringify(formData),
+            //     credentials: "include"
+            // });
+            // const data = await res.json();
 
-            console.log("Login Response:", data);
+            // console.log("Login Response:", data);
+
+             const data = await login(formData.email, formData.password);
 
                  if (res.ok && data.success && data.user) {
 
