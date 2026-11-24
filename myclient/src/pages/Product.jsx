@@ -7,7 +7,7 @@ const Product = () => {
           const fetchprod =async()=>{
                 try {
           
-               const res = await fetch("https://shopesto.onrender.com/product",{
+               const res = await fetch(`${import.meta.env.VITE_API_URL}/product`,{
                     method: "GET",
                     credentials: "include"
                 })
@@ -24,7 +24,7 @@ const Product = () => {
         }
           }
  const handleaddtocart = async (id, price) => {
-        const res = await fetch("http://localhost:5000/add-to-cart", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include", body: JSON.stringify({ id, price }) })
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/add-to-cart`, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include", body: JSON.stringify({ id, price }) })
         const data = await res.json();
         console.log(data);
     }
