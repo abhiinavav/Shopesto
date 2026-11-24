@@ -9,7 +9,7 @@ const Cart = () => {
     // Fetch Cart
     const fetchCart = async () => {
         try {
-            const res = await fetch("http://localhost:5000/cart", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/cart`, {
                 credentials: "include"
             });
 
@@ -33,7 +33,7 @@ const Cart = () => {
     const handleRemoveFromCart = async (prodId) => {
         try {
             const res = await fetch(
-                `http://localhost:5000/cart/${prodId}`,
+                `${import.meta.env.VITE_API_URL}/cart/${prodId}`,
                 {
                     method: "DELETE",
                     credentials: "include"
@@ -58,7 +58,7 @@ const Cart = () => {
     const handleUpdateQuantity = async (prodId, action) => {
         try {
             const res = await fetch(
-                `http://localhost:5000/cart/${prodId}/${action}`,
+                `${import.meta.env.VITE_API_URL}/cart/${prodId}/${action}`,
                 {
                     method: "PUT",
                     credentials: "include"
