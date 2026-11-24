@@ -47,7 +47,7 @@ function Login() {
 
              const data = await login(formData.email, formData.password);
 
-                 if (res.ok && data.success && data.user) {
+                 if ( data.success && data.user) {
 
         // toast.success("Login Successful!");
 if (data.user.role === "admin") {
