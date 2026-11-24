@@ -90,7 +90,7 @@ const Header = () => {
 
                             {/* Profile */}
                             <Link
-                                to="/me"
+                                to="/user"
                                 className="flex items-center gap-2 rounded-xl border border-gray-100 px-3 py-2 transition hover:border-orange-200 hover:bg-orange-50"
                             >
                                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-500 text-sm font-bold text-white">
