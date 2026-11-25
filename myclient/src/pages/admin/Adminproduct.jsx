@@ -65,7 +65,7 @@ const AdminProduct = () => {
         if (!confirmDelete) return;
 
         try {
-            const res = await fetch(`http://localhost:5000/product/${id}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/product/${id}`, {
                 method: "DELETE",
                 credentials: "include"
             });
