@@ -4,7 +4,7 @@ import {
     LayoutDashboard, Package, Boxes, Users, Star, CreditCard, Plug,
     Settings, CircleHelp, ShieldCheck, LogOut, ShoppingBag, Menu, X,
 } from "lucide-react";
-import { useAuth } from "../../context/useAuth.js";
+import { useAuth } from "../src/context/useAuth.js";
 
 // `to` = real route. Items without a route yet are shown dimmed with a "Soon" tag.
 const general = [
