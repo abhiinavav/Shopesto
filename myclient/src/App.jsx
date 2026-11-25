@@ -14,6 +14,7 @@ import Admin from './pages/admin/Admin'
 import AdminProduct from './pages/admin/Adminproduct'
 import ProtectedRoute from './components/ProtectedRoutes'
 import PublicOnlyRoute from './components/PublicOnlyRoute'
+import AdminLayout from '../layouts/Adminlayout'
 
 
 const App = () => {
@@ -46,11 +47,14 @@ const App = () => {
                     <Route path='/admin'
                        element={
                       <ProtectedRoute allowedRoles={["admin"]}  >
-                        <Admin/>
+                        <AdminLayout/>
                       </ProtectedRoute>
                        
                        
                        }>
+
+                <Route index element={<Admin/>}/>
+
                 <Route path ='/admin/products' element={<AdminProduct/>}/>
 
 

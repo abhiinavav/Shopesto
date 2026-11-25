@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import cors from "cors"
 import cartrouter from './routes/cartroutes.js';
 import adminrouter from './routes/adminroutes.js';
+import dashboardrouter from './routes/admindashboardroutes.js';
 // import dns from "dns"
 
 dotenv.config();
@@ -30,6 +31,7 @@ app.use(router);
 app.use(productrouter);
 app.use(cartrouter);
 app.use(adminrouter)
+app.use(dashboardrouter);
 
 
 
