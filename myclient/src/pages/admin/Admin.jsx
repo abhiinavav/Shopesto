@@ -5,7 +5,7 @@ import {
     Bell, ChevronDown, Search, RefreshCw, Plus, Star, TrendingUp, TrendingDown,
     IndianRupee, Users, Repeat, Receipt, MousePointerClick, ShoppingBag, Package,
 } from "lucide-react";
-import { useAuth } from "../../context/useAuth";
+import { useAuth } from "../../context/useAuth.js";
 
 const API = import.meta.env.VITE_API_URL;
 const formatPrice = (p) => `₹${(Number(p) || 0).toLocaleString("en-IN")}`;
