@@ -14,12 +14,15 @@ import {
     X,
     ArrowUpRight,
     IndianRupee,
-    TrendingUp,
+    RefreshCw,
+    Boxes,
     AlertTriangle,
     Star,
     Plus,
-    RefreshCw,
-    Boxes
+    TrendingUp,
+    ChevronRight,
+    Activity,
+    Crown
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
@@ -66,45 +69,57 @@ const Admin = () => {
         {
             title: "Total Revenue",
             value: `₹${(data?.stats?.totalRevenue || 0).toLocaleString("en-IN")}`,
-            description: "Sales analytics coming soon",
+            description: "Revenue recorded by your store",
             icon: IndianRupee,
-            color: "text-emerald-600",
-            bg: "bg-emerald-50"
+            bg: "bg-orange-50",
+            color: "text-orange-600",
+            accent: "bg-orange-500"
         },
         {
             title: "Total Products",
-            value: data?.stats?.totalProducts ?? "—",
-            description: `${data?.stats?.totalStock ?? 0} units in inventory`,
+            value: data?.stats?.totalProducts ?? 0,
+            description: `${(data?.stats?.totalStock || 0).toLocaleString("en-IN")} units in inventory`,
             icon: Package,
-            color: "text-orange-600",
-            bg: "bg-orange-50"
+            bg: "bg-blue-50",
+            color: "text-blue-600",
+            accent: "bg-blue-500"
         },
         {
             title: "Total Customers",
-            value: data?.stats?.totalCustomers ?? "—",
-            description: "Active customer accounts",
+            value: data?.stats?.totalCustomers ?? 0,
+            description: "Registered customer accounts",
             icon: Users,
-            color: "text-blue-600",
-            bg: "bg-blue-50"
+            bg: "bg-purple-50",
+            color: "text-purple-600",
+            accent: "bg-purple-500"
         },
         {
             title: "Total Admins",
-            value: data?.stats?.totalAdmins ?? "—",
-            description: "Active administrators",
+            value: data?.stats?.totalAdmins ?? 0,
+            description: "Store administrators",
             icon: ShieldCheck,
-            color: "text-purple-600",
-            bg: "bg-purple-50"
+            bg: "bg-emerald-50",
+            color: "text-emerald-600",
+            accent: "bg-emerald-500"
         }
     ];
 
     const recentProducts = data?.recentProducts || [];
+    const topRatedProducts = data?.topRatedProducts || [];
 
     const filteredProducts = recentProducts.filter((product) =>
         product.productName?.toLowerCase().includes(search.toLowerCase())
     );
 
+    const totalStock = data?.stats?.totalStock || 0;
+    const lowStock = data?.stats?.lowStockProducts || 0;
+    const featuredProducts = data?.stats?.featuredProducts || 0;
+
+    const formatPrice = (price) =>
+        `₹${(Number(price) || 0).toLocaleString("en-IN")}`;
+
     return (
-        <div className="min-h-screen bg-[#F5F5F4] flex text-gray-900">
+        <div className="min-h-screen bg-[#F7F7F8] text-[#171717] flex">
 
             {/* MOBILE OVERLAY */}
             {sidebarOpen && (
@@ -115,62 +130,110 @@ const Admin = () => {
             )}
 
             {/* SIDEBAR */}
-            <aside className={`fixed lg:sticky top-0 left-0 z-50 h-screen w-[260px] bg-[#111827] text-white flex flex-col transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
+            <aside className={`
+                fixed lg:sticky top-0 left-0 z-50
+                h-screen w-[260px] shrink-0
+                bg-[#101010] text-white
+                flex flex-col
+                transition-transform duration-300
+                ${sidebarOpen
+                    ? "translate-x-0"
+                    : "-translate-x-full lg:translate-x-0"}
+            `}>
 
-                <div className="h-24 px-7 flex items-center justify-between border-b border-white/10">
+                {/* LOGO */}
+                <div className="h-[90px] px-7 flex items-center justify-between border-b border-white/10">
 
-                    <Link to="/admin" className="text-2xl font-bold">
-                        shopes<span className="text-orange-500">too.</span>
+                    <Link
+                        to="/admin"
+                        className="flex items-center gap-3"
+                    >
+                        <div className="w-10 h-10 rounded-xl bg-[#F97316] flex items-center justify-center">
+                            <ShoppingBag size={22} strokeWidth={2.5} />
+                        </div>
+
+                        <span className="text-[23px] font-bold tracking-tight">
+                            Shopes<span className="text-[#F97316]">too.</span>
+                        </span>
                     </Link>
 
-                    <button onClick={() => setSidebarOpen(false)} className="lg:hidden">
+                    <button
+                        onClick={() => setSidebarOpen(false)}
+                        className="lg:hidden text-gray-400"
+                    >
                         <X size={22} />
                     </button>
 
                 </div>
 
-                <div className="flex-1 px-5 py-8 overflow-y-auto">
+                {/* NAVIGATION */}
+                <div className="flex-1 px-4 py-8 overflow-y-auto">
 
-                    <p className="text-[10px] uppercase tracking-[2px] text-gray-500 mb-5 px-3">
-                        Workspace
+                    <p className="text-[10px] uppercase tracking-[2px] text-gray-500 font-semibold px-3 mb-5">
+                        Main Menu
                     </p>
 
                     <nav className="space-y-2">
 
-                        <Link to="/admin" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-500 text-white text-sm font-semibold">
+                        <Link
+                            to="/admin"
+                            onClick={() => setSidebarOpen(false)}
+                            className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-[#F97316] text-white text-sm font-semibold shadow-lg shadow-orange-950/20"
+                        >
                             <LayoutDashboard size={19} />
-                            Overview
+                            Dashboard
                         </Link>
 
-                        <Link to="/admin/products" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white text-sm">
+                        <Link
+                            to="/admin/products"
+                            onClick={() => setSidebarOpen(false)}
+                            className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
+                        >
                             <Package size={19} />
                             Products
+                            <ChevronRight size={16} className="ml-auto" />
                         </Link>
 
-                        <Link to="/admin/orders" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white text-sm">
+                        <Link
+                            to="/admin/orders"
+                            onClick={() => setSidebarOpen(false)}
+                            className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
+                        >
                             <ShoppingBag size={19} />
                             Orders
                         </Link>
 
-                        <Link to="/admin/users" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white text-sm">
+                        <Link
+                            to="/admin/users"
+                            onClick={() => setSidebarOpen(false)}
+                            className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
+                        >
                             <Users size={19} />
                             Customers
                         </Link>
 
                     </nav>
 
-                    <p className="text-[10px] uppercase tracking-[2px] text-gray-500 mt-10 mb-5 px-3">
-                        Administration
+                    <p className="text-[10px] uppercase tracking-[2px] text-gray-500 font-semibold px-3 mt-10 mb-5">
+                        Management
                     </p>
 
                     <nav className="space-y-2">
 
-                        <Link to="/admin/admins" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white text-sm">
+                        <Link
+                            to="/admin/admins"
+                            onClick={() => setSidebarOpen(false)}
+                            className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
+                        >
                             <ShieldCheck size={19} />
                             Admin Management
                         </Link>
 
-                        <Link to="/admin/settings" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white text-sm">
+                        <Link
+                            to="/admin/settings"
+                            onClick={() => setSidebarOpen(false)}
+                            className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
+                        >
                             <Settings size={19} />
                             Settings
                         </Link>
@@ -179,59 +242,114 @@ const Admin = () => {
 
                 </div>
 
+                {/* SIDEBAR BOTTOM */}
                 <div className="p-5 border-t border-white/10">
+
                     <button
                         onClick={() => toast("Connect your logout function here")}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 rounded-xl"
+                        className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition"
                     >
                         <LogOut size={19} />
                         Logout
                     </button>
+
+                    <div className="mt-5 px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.07]">
+                        <p className="text-[11px] text-gray-500">
+                            Store Dashboard
+                        </p>
+                        <p className="text-sm font-semibold mt-1">
+                            Shopestoo Admin
+                        </p>
+                        <div className="flex items-center gap-2 mt-3">
+                            <span className="w-2 h-2 rounded-full bg-green-500" />
+                            <span className="text-[10px] text-gray-400">
+                                Management workspace
+                            </span>
+                        </div>
+                    </div>
+
                 </div>
 
             </aside>
 
 
-            {/* MAIN */}
+            {/* MAIN CONTENT */}
             <main className="flex-1 min-w-0">
 
-                {/* HEADER */}
-                <header className="h-[82px] bg-white border-b border-gray-100 px-5 md:px-9 flex items-center justify-between sticky top-0 z-30">
-
-                    <div className="flex items-center gap-4">
-
-                        <button onClick={() => setSidebarOpen(true)} className="lg:hidden">
-                            <Menu size={22} />
-                        </button>
-
-                        <div>
-                            <p className="text-[10px] uppercase tracking-[2px] text-gray-400">
-                                Shopestoo / Workspace
-                            </p>
-                            <h1 className="text-lg font-bold mt-1">
-                                Dashboard Overview
-                            </h1>
-                        </div>
-
-                    </div>
+                {/* TOP HEADER */}
+                <header className="h-[82px] bg-white border-b border-gray-100 px-5 md:px-8 flex items-center justify-between sticky top-0 z-30">
 
                     <div className="flex items-center gap-4">
 
                         <button
+                            onClick={() => setSidebarOpen(true)}
+                            className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
+                        >
+                            <Menu size={22} />
+                        </button>
+
+                        <div className="hidden sm:block">
+                            <p className="text-[10px] text-gray-400 uppercase tracking-[1.5px]">
+                                Shopestoo / Workspace
+                            </p>
+                            <h1 className="font-bold text-lg mt-1">
+                                Dashboard
+                            </h1>
+                        </div>
+
+                        <h1 className="sm:hidden font-bold text-lg">
+                            Dashboard
+                        </h1>
+
+                    </div>
+
+                    <div className="flex items-center gap-3 md:gap-5">
+
+                        {/* SEARCH */}
+                        <div className="hidden md:flex items-center gap-3 bg-[#F5F5F6] px-4 py-3 rounded-xl w-[280px] lg:w-[350px]">
+                            <Search size={18} className="text-gray-400 shrink-0" />
+                            <input
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                placeholder="Search products..."
+                                className="bg-transparent outline-none text-sm w-full placeholder:text-gray-400"
+                            />
+                        </div>
+
+                        {/* REFRESH */}
+                        <button
                             onClick={fetchDashboard}
                             title="Refresh dashboard"
-                            className="p-2.5 rounded-xl hover:bg-gray-100 text-gray-500"
+                            className="p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 transition"
                         >
-                            <RefreshCw size={19} className={loading ? "animate-spin" : ""} />
+                            <RefreshCw
+                                size={19}
+                                className={loading ? "animate-spin" : ""}
+                            />
                         </button>
 
-                        <button className="relative p-2 text-gray-500">
-                            <Bell size={21} />
-                            <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full" />
+                        {/* NOTIFICATION */}
+                        <button className="relative p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 transition">
+                            <Bell size={20} />
+                            <span className="absolute top-2 right-2 w-2 h-2 bg-[#F97316] rounded-full border-2 border-white" />
                         </button>
 
-                        <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold">
-                            A
+                        <div className="h-8 w-px bg-gray-200 hidden sm:block" />
+
+                        {/* ADMIN PROFILE */}
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-orange-100 text-[#F97316] flex items-center justify-center font-bold">
+                                A
+                            </div>
+
+                            <div className="hidden sm:block">
+                                <p className="text-sm font-semibold">
+                                    Admin
+                                </p>
+                                <p className="text-[11px] text-gray-400">
+                                    Administrator
+                                </p>
+                            </div>
                         </div>
 
                     </div>
@@ -239,58 +357,64 @@ const Admin = () => {
                 </header>
 
 
-                {/* DASHBOARD CONTENT */}
-                <div className="p-5 md:p-9 max-w-[1600px] mx-auto">
+                {/* DASHBOARD BODY */}
+                <div className="max-w-[1600px] mx-auto p-5 md:p-8 lg:p-9">
 
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-9">
+                    {/* WELCOME */}
+                    <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-8">
 
                         <div>
-                            <p className="text-orange-600 text-xs font-bold uppercase tracking-[2px]">
+                            <div className="flex items-center gap-2 text-[#F97316] text-xs font-bold uppercase tracking-[2px]">
+                                <Activity size={15} />
                                 Store Analytics
-                            </p>
+                            </div>
 
-                            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mt-3">
-                                Welcome back, Admin.
+                            <h2 className="text-3xl md:text-[38px] font-bold tracking-tight mt-3">
+                                Welcome Back, Admin!
                             </h2>
 
                             <p className="text-gray-500 text-sm mt-2">
-                                Here's what's happening with your store.
+                                Here's what's happening with your Shopestoo store today.
                             </p>
                         </div>
 
                         <Link
                             to="/admin/add-product"
-                            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm transition"
+                            className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-[#F97316] hover:bg-[#EA580C] text-white font-semibold text-sm shadow-lg shadow-orange-500/15 transition"
                         >
                             <Plus size={18} />
-                            Add Product
+                            Add New Product
                         </Link>
 
-                    </div>
+                    </section>
 
 
-                    {/* STATS */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+                    {/* STATS CARDS */}
+                    <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
 
                         {stats.map((stat) => {
+
                             const Icon = stat.icon;
 
                             return (
-                                <div key={stat.title} className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-lg transition">
+                                <div
+                                    key={stat.title}
+                                    className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition duration-300"
+                                >
 
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex items-center justify-between">
 
                                         <p className="text-sm text-gray-500 font-medium">
                                             {stat.title}
                                         </p>
 
-                                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color}`}>
-                                            <Icon size={22} />
+                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color}`}>
+                                            <Icon size={23} />
                                         </div>
 
                                     </div>
 
-                                    <h3 className="text-3xl font-bold mt-5">
+                                    <h3 className="text-[30px] font-bold tracking-tight mt-5">
                                         {loading ? "..." : stat.value}
                                     </h3>
 
@@ -298,52 +422,73 @@ const Admin = () => {
                                         {stat.description}
                                     </p>
 
+                                    <div className="mt-5 h-1 w-full rounded-full bg-gray-100 overflow-hidden">
+                                        <div className={`h-full w-1/3 rounded-full ${stat.accent}`} />
+                                    </div>
+
                                 </div>
                             );
+
                         })}
 
-                    </div>
+                    </section>
 
 
-                    {/* INVENTORY OVERVIEW */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-7">
+                    {/* INVENTORY SECTION */}
+                    <section className="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-7">
 
-                        <div className="md:col-span-2 bg-[#111827] rounded-2xl p-7 text-white">
+                        {/* INVENTORY MAIN CARD */}
+                        <div className="lg:col-span-2 bg-[#151515] rounded-2xl p-7 md:p-8 text-white relative overflow-hidden">
 
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <p className="text-gray-400 text-sm">
-                                        Inventory Overview
-                                    </p>
+                            <div className="absolute -right-20 -top-24 w-72 h-72 rounded-full bg-[#F97316]/10 blur-3xl" />
 
-                                    <h3 className="text-3xl font-bold mt-3">
-                                        {loading ? "..." : (data?.stats?.totalStock || 0).toLocaleString("en-IN")}
-                                    </h3>
+                            <div className="relative z-10">
 
-                                    <p className="text-gray-400 text-xs mt-2">
-                                        Total units across active products
-                                    </p>
+                                <div className="flex justify-between items-start">
+
+                                    <div>
+                                        <div className="flex items-center gap-2 text-gray-400 text-sm">
+                                            <Boxes size={17} />
+                                            Inventory Overview
+                                        </div>
+
+                                        <h3 className="text-4xl font-bold mt-5">
+                                            {loading ? "..." : totalStock.toLocaleString("en-IN")}
+                                        </h3>
+
+                                        <p className="text-gray-400 text-xs mt-2">
+                                            Total units across your products
+                                        </p>
+                                    </div>
+
+                                    <div className="w-14 h-14 rounded-2xl bg-[#F97316]/15 text-[#F97316] flex items-center justify-center">
+                                        <Package size={27} />
+                                    </div>
+
                                 </div>
 
-                                <div className="w-12 h-12 bg-orange-500/15 text-orange-400 rounded-xl flex items-center justify-center">
-                                    <Boxes size={24} />
-                                </div>
-                            </div>
+                                <div className="grid grid-cols-2 gap-5 mt-9 pt-6 border-t border-white/10">
 
-                            <div className="grid grid-cols-2 gap-5 mt-9 pt-6 border-t border-white/10">
+                                    <div>
+                                        <p className="text-xs text-gray-400">
+                                            Featured Products
+                                        </p>
 
-                                <div>
-                                    <p className="text-gray-400 text-xs">Featured Products</p>
-                                    <p className="text-2xl font-bold mt-2">
-                                        {data?.stats?.featuredProducts ?? 0}
-                                    </p>
-                                </div>
+                                        <p className="text-2xl font-bold mt-2">
+                                            {loading ? "..." : featuredProducts}
+                                        </p>
+                                    </div>
 
-                                <div>
-                                    <p className="text-gray-400 text-xs">Low Stock Products</p>
-                                    <p className="text-2xl font-bold text-orange-400 mt-2">
-                                        {data?.stats?.lowStockProducts ?? 0}
-                                    </p>
+                                    <div>
+                                        <p className="text-xs text-gray-400">
+                                            Low Stock Products
+                                        </p>
+
+                                        <p className="text-2xl font-bold text-[#F97316] mt-2">
+                                            {loading ? "..." : lowStock}
+                                        </p>
+                                    </div>
+
                                 </div>
 
                             </div>
@@ -351,61 +496,86 @@ const Admin = () => {
                         </div>
 
 
-                        <div className="bg-white border border-gray-100 rounded-2xl p-7">
+                        {/* ALERT CARD */}
+                        <div className="bg-white border border-gray-100 rounded-2xl p-7 flex flex-col">
 
-                            <div className="w-11 h-11 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
-                                <AlertTriangle size={22} />
+                            <div className="flex items-center justify-between">
+
+                                <div className="w-12 h-12 rounded-xl bg-orange-50 text-[#F97316] flex items-center justify-center">
+                                    <AlertTriangle size={23} />
+                                </div>
+
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-3 py-1.5 rounded-full">
+                                    Attention
+                                </span>
+
                             </div>
 
-                            <p className="text-sm text-gray-500 mt-5">
+                            <p className="text-sm text-gray-500 mt-6">
                                 Inventory Alerts
                             </p>
 
-                            <h3 className="text-3xl font-bold mt-2">
-                                {data?.stats?.lowStockProducts ?? 0}
+                            <h3 className="text-4xl font-bold mt-2">
+                                {loading ? "..." : lowStock}
                             </h3>
 
                             <p className="text-xs text-gray-400 mt-2">
-                                Products with 5 or fewer units
+                                Products with 5 or fewer units remaining
                             </p>
 
-                            <Link to="/admin/products" className="flex items-center gap-2 text-orange-600 font-semibold text-sm mt-7">
-                                Manage inventory <ArrowUpRight size={16} />
+                            <Link
+                                to="/admin/products"
+                                className="flex items-center gap-2 text-[#F97316] font-semibold text-sm mt-auto pt-7 hover:gap-3 transition-all"
+                            >
+                                Manage Inventory
+                                <ArrowUpRight size={17} />
                             </Link>
 
                         </div>
 
-                    </div>
+                    </section>
 
 
                     {/* RECENT PRODUCTS */}
                     <section className="bg-white border border-gray-100 rounded-2xl mt-8 overflow-hidden">
 
-                        <div className="p-6 md:p-7 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="p-6 md:p-7 flex flex-col md:flex-row md:items-center justify-between gap-5">
 
                             <div>
-                                <h3 className="text-lg font-bold">
-                                    Recently Added Products
-                                </h3>
+                                <div className="flex items-center gap-2">
+                                    <Package size={19} className="text-[#F97316]" />
+                                    <h3 className="text-lg font-bold">
+                                        Recently Added Products
+                                    </h3>
+                                </div>
+
                                 <p className="text-sm text-gray-400 mt-1">
-                                    Latest products added to your store.
+                                    Keep track of your latest store additions.
                                 </p>
                             </div>
 
                             <div className="flex items-center gap-3">
 
-                                <div className="relative">
-                                    <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <div className="relative flex-1 md:flex-none">
+                                    <Search
+                                        size={16}
+                                        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                                    />
+
                                     <input
                                         value={search}
                                         onChange={(e) => setSearch(e.target.value)}
-                                        placeholder="Search products"
-                                        className="w-full sm:w-52 pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm outline-none focus:border-orange-300"
+                                        placeholder="Search products..."
+                                        className="w-full md:w-[220px] pl-9 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition"
                                     />
                                 </div>
 
-                                <Link to="/admin/products" className="text-orange-600 text-sm font-semibold whitespace-nowrap">
-                                    View all
+                                <Link
+                                    to="/admin/products"
+                                    className="text-[#F97316] text-sm font-semibold whitespace-nowrap hover:text-orange-700"
+                                >
+                                    View All
+                                    <ArrowUpRight size={15} className="inline ml-1" />
                                 </Link>
 
                             </div>
@@ -417,46 +587,53 @@ const Admin = () => {
 
                             <table className="w-full text-left">
 
-                                <thead className="bg-gray-50 text-[11px] uppercase tracking-wider text-gray-400">
+                                <thead className="bg-[#F9FAFB] text-[10px] uppercase tracking-wider text-gray-400">
                                     <tr>
-                                        <th className="px-6 py-4">Product</th>
-                                        <th className="px-6 py-4">Category</th>
-                                        <th className="px-6 py-4">Price</th>
-                                        <th className="px-6 py-4">Stock</th>
-                                        <th className="px-6 py-4">Rating</th>
+                                        <th className="px-6 py-4 font-semibold">Product</th>
+                                        <th className="px-6 py-4 font-semibold">Category</th>
+                                        <th className="px-6 py-4 font-semibold">Price</th>
+                                        <th className="px-6 py-4 font-semibold">Stock</th>
+                                        <th className="px-6 py-4 font-semibold">Rating</th>
                                     </tr>
                                 </thead>
 
                                 <tbody className="divide-y divide-gray-100">
 
                                     {loading ? (
+
                                         <tr>
-                                            <td colSpan="5" className="text-center py-12 text-gray-400">
+                                            <td colSpan="5" className="text-center py-14 text-gray-400 text-sm">
                                                 Loading products...
                                             </td>
                                         </tr>
+
                                     ) : filteredProducts.length === 0 ? (
+
                                         <tr>
-                                            <td colSpan="5" className="text-center py-12 text-gray-400">
+                                            <td colSpan="5" className="text-center py-14 text-gray-400 text-sm">
                                                 No products found.
                                             </td>
                                         </tr>
+
                                     ) : (
 
                                         filteredProducts.map((product) => (
 
-                                            <tr key={product._id} className="hover:bg-gray-50/70">
+                                            <tr
+                                                key={product._id}
+                                                className="hover:bg-orange-50/30 transition"
+                                            >
 
                                                 <td className="px-6 py-4">
-                                                    <div className="flex items-center gap-3 min-w-[180px]">
+                                                    <div className="flex items-center gap-3 min-w-[200px]">
 
                                                         <img
-                                                            src={product.images?.[0] || "https://placehold.co/50"}
+                                                            src={product.images?.[0] || "https://placehold.co/60"}
                                                             alt={product.productName}
-                                                            className="w-11 h-11 rounded-lg object-cover bg-gray-100"
+                                                            className="w-12 h-12 rounded-xl object-cover bg-gray-100 border border-gray-100"
                                                         />
 
-                                                        <span className="font-semibold text-sm">
+                                                        <span className="font-semibold text-sm text-gray-800">
                                                             {product.productName}
                                                         </span>
 
@@ -464,22 +641,29 @@ const Admin = () => {
                                                 </td>
 
                                                 <td className="px-6 py-4 text-sm text-gray-500">
-                                                    {product.category}
+                                                    {product.category || "Uncategorized"}
                                                 </td>
 
-                                                <td className="px-6 py-4 text-sm font-semibold">
-                                                    ₹{product.discountprice ?? product.price}
+                                                <td className="px-6 py-4 text-sm font-bold">
+                                                    {formatPrice(product.discountprice ?? product.price)}
                                                 </td>
 
                                                 <td className="px-6 py-4">
-                                                    <span className={`text-xs font-semibold px-3 py-1.5 rounded-full ${product.stock <= 5 ? "bg-red-50 text-red-600" : "bg-emerald-50 text-emerald-600"}`}>
-                                                        {product.stock} units
+                                                    <span className={`text-[11px] font-semibold px-3 py-1.5 rounded-full ${
+                                                        product.stock <= 5
+                                                            ? "bg-red-50 text-red-600"
+                                                            : "bg-emerald-50 text-emerald-600"
+                                                    }`}>
+                                                        {product.stock ?? 0} units
                                                     </span>
                                                 </td>
 
                                                 <td className="px-6 py-4">
-                                                    <span className="flex items-center gap-1 text-sm">
-                                                        <Star size={15} className="text-orange-400 fill-orange-400" />
+                                                    <span className="flex items-center gap-1 text-sm font-medium">
+                                                        <Star
+                                                            size={15}
+                                                            className="text-orange-400 fill-orange-400"
+                                                        />
                                                         {product.ratings || 0}
                                                     </span>
                                                 </td>
@@ -499,82 +683,248 @@ const Admin = () => {
                     </section>
 
 
-                    {/* TOP RATED PRODUCTS */}
-                    <section className="mt-8">
+                    {/* LOWER DASHBOARD GRID */}
+                    <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
 
-                        <div className="mb-5">
-                            <h3 className="text-lg font-bold">Top Rated Products</h3>
-                            <p className="text-sm text-gray-400 mt-1">
-                                Products with the highest customer ratings.
-                            </p>
-                        </div>
+                        {/* TOP RATED PRODUCTS */}
+                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
+                            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
 
-                            {(data?.topRatedProducts || []).map((product) => (
-
-                                <div key={product._id} className="bg-white border border-gray-100 rounded-xl p-4">
-
-                                    <img
-                                        src={product.images?.[0] || "https://placehold.co/200"}
-                                        alt={product.productName}
-                                        className="w-full h-36 object-cover rounded-lg bg-gray-100"
-                                    />
-
-                                    <h4 className="font-semibold text-sm mt-4 truncate">
-                                        {product.productName}
-                                    </h4>
-
-                                    <div className="flex items-center justify-between mt-3">
-                                        <span className="font-bold text-sm">
-                                            ₹{product.price}
-                                        </span>
-
-                                        <span className="flex items-center gap-1 text-xs text-orange-500">
-                                            <Star size={14} fill="currentColor" />
-                                            {product.ratings}
-                                        </span>
+                                <div>
+                                    <div className="flex items-center gap-2">
+                                        <Crown size={19} className="text-[#F97316]" />
+                                        <h3 className="font-bold text-lg">
+                                            Top Rated Products
+                                        </h3>
                                     </div>
 
+                                    <p className="text-xs text-gray-400 mt-1">
+                                        Your highest-rated products.
+                                    </p>
                                 </div>
 
-                            ))}
+                                <Star size={20} className="text-orange-400" />
+
+                            </div>
+
+                            <div className="p-5 space-y-4">
+
+                                {loading ? (
+
+                                    <p className="text-center py-10 text-sm text-gray-400">
+                                        Loading products...
+                                    </p>
+
+                                ) : topRatedProducts.length === 0 ? (
+
+                                    <p className="text-center py-10 text-sm text-gray-400">
+                                        No rated products yet.
+                                    </p>
+
+                                ) : (
+
+                                    topRatedProducts.slice(0, 5).map((product, index) => (
+
+                                        <div
+                                            key={product._id}
+                                            className="flex items-center gap-3"
+                                        >
+
+                                            <span className="w-6 text-xs font-bold text-gray-400">
+                                                {String(index + 1).padStart(2, "0")}
+                                            </span>
+
+                                            <img
+                                                src={product.images?.[0] || "https://placehold.co/60"}
+                                                alt={product.productName}
+                                                className="w-12 h-12 rounded-xl object-cover bg-gray-100"
+                                            />
+
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className="font-semibold text-sm truncate">
+                                                    {product.productName}
+                                                </h4>
+
+                                                <p className="text-xs text-gray-400 mt-1">
+                                                    {formatPrice(product.price)}
+                                                </p>
+                                            </div>
+
+                                            <div className="flex items-center gap-1 text-xs font-semibold text-orange-500 bg-orange-50 px-2.5 py-2 rounded-lg">
+                                                <Star size={13} fill="currentColor" />
+                                                {product.ratings || 0}
+                                            </div>
+
+                                        </div>
+
+                                    ))
+
+                                )}
+
+                            </div>
 
                         </div>
 
-                        {!loading && (data?.topRatedProducts || []).length === 0 && (
-                            <p className="bg-white rounded-xl border border-gray-100 p-8 text-center text-sm text-gray-400">
-                                No rated products yet.
-                            </p>
-                        )}
+
+                        {/* QUICK ACTIONS */}
+                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
+
+                            <div className="p-6 border-b border-gray-100">
+
+                                <div className="flex items-center gap-2">
+                                    <TrendingUp size={19} className="text-[#F97316]" />
+                                    <h3 className="font-bold text-lg">
+                                        Quick Actions
+                                    </h3>
+                                </div>
+
+                                <p className="text-xs text-gray-400 mt-1">
+                                    Manage your store with quick access.
+                                </p>
+
+                            </div>
+
+                            <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+                                <Link
+                                    to="/admin/add-product"
+                                    className="p-5 rounded-xl bg-orange-50 hover:bg-orange-100 transition group"
+                                >
+                                    <div className="w-10 h-10 rounded-xl bg-[#F97316] text-white flex items-center justify-center">
+                                        <Plus size={20} />
+                                    </div>
+
+                                    <h4 className="font-bold text-sm mt-4">
+                                        Add Product
+                                    </h4>
+
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Add new products to your store.
+                                    </p>
+
+                                    <ArrowUpRight size={16} className="text-[#F97316] mt-3 group-hover:translate-x-1 transition" />
+                                </Link>
+
+                                <Link
+                                    to="/admin/products"
+                                    className="p-5 rounded-xl bg-gray-50 hover:bg-gray-100 transition group"
+                                >
+                                    <div className="w-10 h-10 rounded-xl bg-[#171717] text-white flex items-center justify-center">
+                                        <Package size={20} />
+                                    </div>
+
+                                    <h4 className="font-bold text-sm mt-4">
+                                        Manage Products
+                                    </h4>
+
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Edit, update and remove products.
+                                    </p>
+
+                                    <ArrowUpRight size={16} className="text-[#F97316] mt-3 group-hover:translate-x-1 transition" />
+                                </Link>
+
+                                <Link
+                                    to="/admin/users"
+                                    className="p-5 rounded-xl bg-gray-50 hover:bg-gray-100 transition group"
+                                >
+                                    <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center">
+                                        <Users size={20} />
+                                    </div>
+
+                                    <h4 className="font-bold text-sm mt-4">
+                                        Customers
+                                    </h4>
+
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        View registered customers.
+                                    </p>
+
+                                    <ArrowUpRight size={16} className="text-[#F97316] mt-3 group-hover:translate-x-1 transition" />
+                                </Link>
+
+                                <Link
+                                    to="/admin/admins"
+                                    className="p-5 rounded-xl bg-gray-50 hover:bg-gray-100 transition group"
+                                >
+                                    <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+                                        <ShieldCheck size={20} />
+                                    </div>
+
+                                    <h4 className="font-bold text-sm mt-4">
+                                        Admin Management
+                                    </h4>
+
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Manage store administrators.
+                                    </p>
+
+                                    <ArrowUpRight size={16} className="text-[#F97316] mt-3 group-hover:translate-x-1 transition" />
+                                </Link>
+
+                            </div>
+
+                        </div>
 
                     </section>
 
 
-                    {/* ORDERS PLACEHOLDER */}
-                    <section className="mt-8 bg-white border border-gray-100 rounded-2xl p-7">
+                    {/* RECENT ORDERS PLACEHOLDER */}
+                    <section className="bg-white border border-gray-100 rounded-2xl mt-8 overflow-hidden">
 
-                        <div className="flex items-center justify-between">
+                        <div className="p-6 md:p-7 flex items-center justify-between">
+
                             <div>
-                                <h3 className="font-bold text-lg">Recent Orders</h3>
+                                <div className="flex items-center gap-2">
+                                    <ShoppingBag size={19} className="text-[#F97316]" />
+                                    <h3 className="font-bold text-lg">
+                                        Recent Orders
+                                    </h3>
+                                </div>
+
                                 <p className="text-sm text-gray-400 mt-1">
-                                    Order management will be available when checkout is implemented.
+                                    Your customer purchases will appear here.
                                 </p>
                             </div>
 
-                            <ShoppingBag className="text-orange-500" size={24} />
+                            <ShoppingBag size={25} className="text-orange-200" />
+
                         </div>
 
-                        <div className="text-center py-10 border-t border-gray-100 mt-6">
-                            <p className="font-semibold text-gray-700">
-                                No orders yet
+                        <div className="mx-6 mb-6 bg-gray-50 rounded-xl py-10 text-center">
+
+                            <div className="w-12 h-12 rounded-full bg-white border border-gray-100 flex items-center justify-center mx-auto">
+                                <ShoppingBag size={21} className="text-gray-400" />
+                            </div>
+
+                            <p className="font-semibold text-sm mt-4">
+                                Order management coming soon
                             </p>
+
                             <p className="text-xs text-gray-400 mt-2">
-                                Your customer purchases will appear here.
+                                Connect your checkout and order APIs to display purchases here.
                             </p>
+
                         </div>
 
                     </section>
+
+
+                    {/* FOOTER */}
+                    <footer className="py-7 mt-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
+
+                        <p>
+                            © {new Date().getFullYear()} Shopestoo. All rights reserved.
+                        </p>
+
+                        <p>
+                            Admin Dashboard
+                            <span className="text-[#F97316] mx-2">●</span>
+                            Store Management
+                        </p>
+
+                    </footer>
 
                 </div>
 
