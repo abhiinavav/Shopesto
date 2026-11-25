@@ -3,7 +3,7 @@ import User from "../models/usermodel.js"
 import Admin from "../models/adminmodel.js"
 import mongoose from "mongoose"
 
-const LOW_STOCK_LIMIT = 5
+const LOW_STOCK_LIMIT = 30
 const DAY = 24 * 60 * 60 * 1000
 
 // Users have no createdAt field, but every MongoDB _id contains its creation time.
