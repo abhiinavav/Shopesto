@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     LayoutDashboard,
     Package,
@@ -12,384 +12,225 @@ import {
     Search,
     Menu,
     X,
-    Plus,
-    ChevronDown,
-    ChevronRight,
     ArrowUpRight,
     IndianRupee,
     TrendingUp,
-    TrendingDown,
-    ShoppingCart,
-    UserPlus,
-    MoreHorizontal,
-    CalendarDays,
-    Eye,
-    EyeOff,
-    Mail,
-    Phone,
-    Lock,
-    Loader2
+    AlertTriangle,
+    Star,
+    Plus,
+    RefreshCw,
+    Boxes
 } from "lucide-react";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+
+const API = import.meta.env.VITE_API_URL;
 
 const Admin = () => {
 
-    const navigate = useNavigate();
-
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [productOpen, setProductOpen] = useState(false);
-    const [showAddAdmin, setShowAddAdmin] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [search, setSearch] = useState("");
 
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        phone: "",
-        password: ""
-    });
-
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
-
-
-    // CREATE ADMIN
-    const handleAddAdmin = async (e) => {
-        e.preventDefault();
-
+    const fetchDashboard = async () => {
         try {
             setLoading(true);
 
-            const res = await fetch(
-                `${import.meta.env.VITE_API_URL}/adminregister`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    credentials: "include",
-                    body: JSON.stringify(formData)
-                }
-            );
+            const res = await fetch(`${API}/dashboard`, {
+                credentials: "include"
+            });
 
-            const data = await res.json();
+            const result = await res.json();
 
-            if (res.ok && data.success) {
-
-                toast.success("Admin created successfully!");
-
-                setFormData({
-                    name: "",
-                    email: "",
-                    phone: "",
-                    password: ""
-                });
-
-                setShowAddAdmin(false);
-
-            } else {
-                toast.error(data.message || "Admin creation failed!");
+            if (!res.ok || !result.success) {
+                throw new Error(result.message || "Dashboard fetch failed");
             }
+
+            setData(result);
 
         } catch (error) {
             console.log(error);
-            toast.error("Something went wrong!");
+            toast.error(error.message || "Unable to load dashboard");
         } finally {
             setLoading(false);
         }
     };
 
+    useEffect(() => {
+        fetchDashboard();
+    }, []);
 
     const stats = [
         {
             title: "Total Revenue",
-            value: "₹0",
-            change: "Store revenue",
+            value: `₹${(data?.stats?.totalRevenue || 0).toLocaleString("en-IN")}`,
+            description: "Sales analytics coming soon",
             icon: IndianRupee,
             color: "text-emerald-600",
             bg: "bg-emerald-50"
         },
         {
-            title: "Total Orders",
-            value: "0",
-            change: "All customer orders",
-            icon: ShoppingCart,
-            color: "text-blue-600",
-            bg: "bg-blue-50"
-        },
-        {
             title: "Total Products",
-            value: "0",
-            change: "Products available",
+            value: data?.stats?.totalProducts ?? "—",
+            description: `${data?.stats?.totalStock ?? 0} units in inventory`,
             icon: Package,
             color: "text-orange-600",
             bg: "bg-orange-50"
         },
         {
             title: "Total Customers",
-            value: "0",
-            change: "Registered customers",
+            value: data?.stats?.totalCustomers ?? "—",
+            description: "Active customer accounts",
             icon: Users,
+            color: "text-blue-600",
+            bg: "bg-blue-50"
+        },
+        {
+            title: "Total Admins",
+            value: data?.stats?.totalAdmins ?? "—",
+            description: "Active administrators",
+            icon: ShieldCheck,
             color: "text-purple-600",
             bg: "bg-purple-50"
         }
     ];
 
+    const recentProducts = data?.recentProducts || [];
 
-    const closeSidebar = () => setSidebarOpen(false);
-
+    const filteredProducts = recentProducts.filter((product) =>
+        product.productName?.toLowerCase().includes(search.toLowerCase())
+    );
 
     return (
-
-        <div className="min-h-screen bg-[#F6F5F2] flex font-sans text-[#242424]">
+        <div className="min-h-screen bg-[#F5F5F4] flex text-gray-900">
 
             {/* MOBILE OVERLAY */}
             {sidebarOpen && (
                 <div
-                    onClick={closeSidebar}
-                    className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+                    onClick={() => setSidebarOpen(false)}
+                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
                 />
             )}
 
-
             {/* SIDEBAR */}
-            <aside className={`
-                fixed lg:sticky top-0 left-0 z-50
-                h-screen w-[270px] shrink-0
-                bg-[#20211F] text-white
-                flex flex-col
-                transition-transform duration-300
-                ${sidebarOpen
-                    ? "translate-x-0"
-                    : "-translate-x-full lg:translate-x-0"}
-            `}>
+            <aside className={`fixed lg:sticky top-0 left-0 z-50 h-screen w-[260px] bg-[#111827] text-white flex flex-col transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
 
-                {/* BRAND */}
-                <div className="h-24 px-8 flex items-center justify-between border-b border-white/10">
+                <div className="h-24 px-7 flex items-center justify-between border-b border-white/10">
 
-                    <Link to="/admin" className="text-2xl tracking-tight font-bold">
-                        shopes<span className="text-[#D99A65]">too.</span>
+                    <Link to="/admin" className="text-2xl font-bold">
+                        shopes<span className="text-orange-500">too.</span>
                     </Link>
 
-                    <button
-                        onClick={closeSidebar}
-                        className="lg:hidden text-gray-400"
-                    >
-                        <X size={22}/>
+                    <button onClick={() => setSidebarOpen(false)} className="lg:hidden">
+                        <X size={22} />
                     </button>
 
                 </div>
 
+                <div className="flex-1 px-5 py-8 overflow-y-auto">
 
-                {/* NAVIGATION */}
-                <div className="flex-1 overflow-y-auto px-5 py-8">
-
-                    <p className="text-[10px] tracking-[2.5px] text-gray-500 font-semibold mb-5 px-3">
-                        WORKSPACE
+                    <p className="text-[10px] uppercase tracking-[2px] text-gray-500 mb-5 px-3">
+                        Workspace
                     </p>
-
 
                     <nav className="space-y-2">
 
-                        <Link
-                            to="/admin"
-                            onClick={closeSidebar}
-                            className="flex items-center gap-3 px-4 py-3.5 rounded-lg bg-[#D99A65] text-[#20211F] text-sm font-semibold"
-                        >
-                            <LayoutDashboard size={19}/>
+                        <Link to="/admin" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-500 text-white text-sm font-semibold">
+                            <LayoutDashboard size={19} />
                             Overview
                         </Link>
 
+                        <Link to="/admin/products" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white text-sm">
+                            <Package size={19} />
+                            Products
+                        </Link>
 
-                        {/* PRODUCTS DROPDOWN */}
-                        <div>
-
-                            <button
-                                onClick={() => setProductOpen(!productOpen)}
-                                className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
-                            >
-                                <Package size={19}/>
-                                <span className="flex-1 text-left">Products</span>
-                                <ChevronDown
-                                    size={16}
-                                    className={`transition-transform ${productOpen ? "rotate-180" : ""}`}
-                                />
-                            </button>
-
-
-                            {productOpen && (
-
-                                <div className="ml-6 pl-5 border-l border-white/10 mt-2 space-y-1">
-
-                                    <Link
-                                        to="/admin/products"
-                                        onClick={closeSidebar}
-                                        className="block px-3 py-2.5 text-sm text-gray-400 hover:text-[#D99A65]"
-                                    >
-                                        All Products
-                                    </Link>
-
-                                    <Link
-                                        to="/admin/add-product"
-                                        onClick={closeSidebar}
-                                        className="block px-3 py-2.5 text-sm text-gray-400 hover:text-[#D99A65]"
-                                    >
-                                        Add New Product
-                                    </Link>
-
-                                    <Link
-                                        to="/admin/categories"
-                                        onClick={closeSidebar}
-                                        className="block px-3 py-2.5 text-sm text-gray-400 hover:text-[#D99A65]"
-                                    >
-                                        Categories
-                                    </Link>
-
-                                </div>
-
-                            )}
-
-                        </div>
-
-
-                        <Link
-                            to="/admin/orders"
-                            onClick={closeSidebar}
-                            className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
-                        >
-                            <ShoppingBag size={19}/>
+                        <Link to="/admin/orders" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white text-sm">
+                            <ShoppingBag size={19} />
                             Orders
                         </Link>
 
-
-                        <Link
-                            to="/admin/users"
-                            onClick={closeSidebar}
-                            className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
-                        >
-                            <Users size={19}/>
+                        <Link to="/admin/users" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white text-sm">
+                            <Users size={19} />
                             Customers
                         </Link>
 
                     </nav>
 
+                    <p className="text-[10px] uppercase tracking-[2px] text-gray-500 mt-10 mb-5 px-3">
+                        Administration
+                    </p>
 
-                    <div className="mt-12">
+                    <nav className="space-y-2">
 
-                        <p className="text-[10px] tracking-[2.5px] text-gray-500 font-semibold mb-5 px-3">
-                            ADMINISTRATION
-                        </p>
-
-
-                        <button
-                            onClick={() => {
-                                setShowAddAdmin(true);
-                                closeSidebar();
-                            }}
-                            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
-                        >
-                            <ShieldCheck size={19}/>
+                        <Link to="/admin/admins" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white text-sm">
+                            <ShieldCheck size={19} />
                             Admin Management
-                        </button>
+                        </Link>
 
-
-                        <button
-                            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
-                        >
-                            <Settings size={19}/>
+                        <Link to="/admin/settings" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white text-sm">
+                            <Settings size={19} />
                             Settings
-                        </button>
+                        </Link>
 
-                    </div>
+                    </nav>
 
                 </div>
 
-
-                {/* SIDEBAR FOOTER */}
                 <div className="p-5 border-t border-white/10">
-
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
-
-                        <div className="w-10 h-10 rounded-full bg-[#D99A65] text-[#20211F] flex items-center justify-center font-bold">
-                            A
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold">Administrator</p>
-                            <p className="text-xs text-gray-500">Store Admin</p>
-                        </div>
-
-                        <button
-                            onClick={() => toast("Connect your logout function here")}
-                            className="text-gray-500 hover:text-red-400"
-                        >
-                            <LogOut size={18}/>
-                        </button>
-
-                    </div>
-
+                    <button
+                        onClick={() => toast("Connect your logout function here")}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 rounded-xl"
+                    >
+                        <LogOut size={19} />
+                        Logout
+                    </button>
                 </div>
 
             </aside>
 
 
-
-            {/* MAIN AREA */}
+            {/* MAIN */}
             <main className="flex-1 min-w-0">
 
-
                 {/* HEADER */}
-                <header className="h-[82px] bg-white/80 backdrop-blur-xl border-b border-[#EAE8E3] px-5 md:px-10 flex items-center justify-between sticky top-0 z-30">
+                <header className="h-[82px] bg-white border-b border-gray-100 px-5 md:px-9 flex items-center justify-between sticky top-0 z-30">
 
                     <div className="flex items-center gap-4">
 
-                        <button
-                            onClick={() => setSidebarOpen(true)}
-                            className="lg:hidden"
-                        >
-                            <Menu size={23}/>
+                        <button onClick={() => setSidebarOpen(true)} className="lg:hidden">
+                            <Menu size={22} />
                         </button>
 
                         <div>
-                            <p className="text-[10px] uppercase tracking-[2px] text-gray-400 font-semibold">
+                            <p className="text-[10px] uppercase tracking-[2px] text-gray-400">
                                 Shopestoo / Workspace
                             </p>
-
-                            <h1 className="text-lg font-semibold mt-1">
-                                Overview
+                            <h1 className="text-lg font-bold mt-1">
+                                Dashboard Overview
                             </h1>
                         </div>
 
                     </div>
 
+                    <div className="flex items-center gap-4">
 
-                    <div className="flex items-center gap-3 md:gap-6">
-
-                        <div className="hidden md:flex items-center bg-[#F6F5F2] px-4 py-2.5 rounded-lg w-64">
-
-                            <Search size={17} className="text-gray-400"/>
-
-                            <input
-                                placeholder="Search..."
-                                className="bg-transparent outline-none text-sm ml-3 w-full"
-                            />
-
-                        </div>
-
-
-                        <button className="relative p-2 text-gray-500 hover:text-black">
-                            <Bell size={20}/>
-                            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#D99A65]"/>
+                        <button
+                            onClick={fetchDashboard}
+                            title="Refresh dashboard"
+                            className="p-2.5 rounded-xl hover:bg-gray-100 text-gray-500"
+                        >
+                            <RefreshCw size={19} className={loading ? "animate-spin" : ""} />
                         </button>
 
+                        <button className="relative p-2 text-gray-500">
+                            <Bell size={21} />
+                            <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full" />
+                        </button>
 
-                        <div className="w-9 h-9 rounded-full bg-[#E9D5C3] flex items-center justify-center text-sm font-bold">
+                        <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold">
                             A
                         </div>
 
@@ -398,232 +239,176 @@ const Admin = () => {
                 </header>
 
 
+                {/* DASHBOARD CONTENT */}
+                <div className="p-5 md:p-9 max-w-[1600px] mx-auto">
 
-                {/* CONTENT */}
-                <div className="max-w-[1550px] mx-auto px-5 md:px-10 py-10">
-
-
-                    {/* WELCOME SECTION */}
-                    <section className="flex flex-col xl:flex-row xl:items-end justify-between gap-6 mb-10">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-9">
 
                         <div>
-
-                            <p className="text-[#B77D50] text-xs uppercase tracking-[3px] font-semibold mb-4">
-                                Dashboard
+                            <p className="text-orange-600 text-xs font-bold uppercase tracking-[2px]">
+                                Store Analytics
                             </p>
 
-                            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
-                                Good to see you, Admin.
+                            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mt-3">
+                                Welcome back, Admin.
                             </h2>
 
-                            <p className="text-gray-500 text-sm mt-3">
-                                Here's a look at what's happening across your store.
+                            <p className="text-gray-500 text-sm mt-2">
+                                Here's what's happening with your store.
                             </p>
-
                         </div>
 
+                        <Link
+                            to="/admin/add-product"
+                            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm transition"
+                        >
+                            <Plus size={18} />
+                            Add Product
+                        </Link>
 
-                        <div className="flex items-center gap-3">
-
-                            <div className="flex items-center gap-2 px-4 py-3 bg-white border border-[#EAE8E3] rounded-lg text-sm text-gray-500">
-                                <CalendarDays size={17}/>
-                                Store Overview
-                            </div>
-
-                            <button
-                                onClick={() => navigate("/admin/products")}
-                                className="flex items-center gap-2 px-5 py-3 bg-[#20211F] hover:bg-[#D99A65] hover:text-[#20211F] text-white rounded-lg text-sm font-semibold transition"
-                            >
-                                <Package size={17}/>
-                                Products
-                                <ArrowUpRight size={15}/>
-                            </button>
-
-                        </div>
-
-                    </section>
-
+                    </div>
 
 
                     {/* STATS */}
-                    <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
 
                         {stats.map((stat) => {
-
                             const Icon = stat.icon;
 
                             return (
-
-                                <div
-                                    key={stat.title}
-                                    className="bg-white p-6 rounded-xl border border-[#EAE8E3] hover:shadow-md transition"
-                                >
+                                <div key={stat.title} className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-lg transition">
 
                                     <div className="flex justify-between items-center">
 
-                                        <span className="text-sm text-gray-500 font-medium">
+                                        <p className="text-sm text-gray-500 font-medium">
                                             {stat.title}
-                                        </span>
+                                        </p>
 
-                                        <div className={`w-10 h-10 flex items-center justify-center rounded-lg ${stat.bg} ${stat.color}`}>
-                                            <Icon size={20}/>
+                                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color}`}>
+                                            <Icon size={22} />
                                         </div>
 
                                     </div>
 
-
-                                    <h3 className="text-3xl font-semibold mt-6 tracking-tight">
-                                        {stat.value}
+                                    <h3 className="text-3xl font-bold mt-5">
+                                        {loading ? "..." : stat.value}
                                     </h3>
 
-
-                                    <div className="flex items-center gap-2 mt-4 text-xs text-gray-400">
-                                        {stat.change}
-                                    </div>
-
-                                </div>
-
-                            );
-
-                        })}
-
-                    </section>
-
-
-
-                    {/* MAIN DASHBOARD GRID */}
-                    <section className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-8">
-
-
-                        {/* REVENUE PANEL */}
-                        <div className="xl:col-span-2 bg-white rounded-xl border border-[#EAE8E3] p-6 md:p-8">
-
-                            <div className="flex items-center justify-between">
-
-                                <div>
-                                    <p className="text-sm text-gray-500">
-                                        Revenue Overview
+                                    <p className="text-xs text-gray-400 mt-3">
+                                        {stat.description}
                                     </p>
 
-                                    <h3 className="text-3xl font-semibold mt-2">
-                                        ₹0.00
+                                </div>
+                            );
+                        })}
+
+                    </div>
+
+
+                    {/* INVENTORY OVERVIEW */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-7">
+
+                        <div className="md:col-span-2 bg-[#111827] rounded-2xl p-7 text-white">
+
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <p className="text-gray-400 text-sm">
+                                        Inventory Overview
+                                    </p>
+
+                                    <h3 className="text-3xl font-bold mt-3">
+                                        {loading ? "..." : (data?.stats?.totalStock || 0).toLocaleString("en-IN")}
                                     </h3>
+
+                                    <p className="text-gray-400 text-xs mt-2">
+                                        Total units across active products
+                                    </p>
                                 </div>
 
-                                <button className="text-gray-400 hover:text-black">
-                                    <MoreHorizontal size={23}/>
-                                </button>
-
+                                <div className="w-12 h-12 bg-orange-500/15 text-orange-400 rounded-xl flex items-center justify-center">
+                                    <Boxes size={24} />
+                                </div>
                             </div>
 
+                            <div className="grid grid-cols-2 gap-5 mt-9 pt-6 border-t border-white/10">
 
-                            <div className="h-[220px] mt-8 flex flex-col items-center justify-center border-t border-[#F0EFEB]">
-
-                                <div className="w-12 h-12 rounded-full bg-[#F6F5F2] flex items-center justify-center mb-4">
-                                    <TrendingUp size={22} className="text-[#B77D50]"/>
+                                <div>
+                                    <p className="text-gray-400 text-xs">Featured Products</p>
+                                    <p className="text-2xl font-bold mt-2">
+                                        {data?.stats?.featuredProducts ?? 0}
+                                    </p>
                                 </div>
 
-                                <p className="text-sm font-medium text-gray-700">
-                                    Revenue analytics will appear here
-                                </p>
-
-                                <p className="text-xs text-gray-400 mt-2">
-                                    Waiting for your first store transactions.
-                                </p>
+                                <div>
+                                    <p className="text-gray-400 text-xs">Low Stock Products</p>
+                                    <p className="text-2xl font-bold text-orange-400 mt-2">
+                                        {data?.stats?.lowStockProducts ?? 0}
+                                    </p>
+                                </div>
 
                             </div>
 
                         </div>
 
 
+                        <div className="bg-white border border-gray-100 rounded-2xl p-7">
 
-                        {/* QUICK ACTIONS */}
-                        <div className="bg-[#20211F] text-white rounded-xl p-7">
+                            <div className="w-11 h-11 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
+                                <AlertTriangle size={22} />
+                            </div>
 
-                            <p className="text-xs uppercase tracking-[2px] text-[#D99A65] font-semibold">
-                                Shortcuts
+                            <p className="text-sm text-gray-500 mt-5">
+                                Inventory Alerts
                             </p>
 
-                            <h3 className="text-2xl font-semibold mt-3">
-                                Manage your store.
+                            <h3 className="text-3xl font-bold mt-2">
+                                {data?.stats?.lowStockProducts ?? 0}
                             </h3>
 
-                            <p className="text-gray-400 text-sm mt-2">
-                                Everything you need to keep things running.
+                            <p className="text-xs text-gray-400 mt-2">
+                                Products with 5 or fewer units
                             </p>
 
-
-                            <div className="space-y-3 mt-8">
-
-
-                                <Link
-                                    to="/admin/add-product"
-                                    className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-lg transition"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <Plus size={18} className="text-[#D99A65]"/>
-                                        <span className="text-sm font-medium">Add Product</span>
-                                    </div>
-
-                                    <ArrowUpRight size={17} className="text-gray-400"/>
-                                </Link>
-
-
-                                <Link
-                                    to="/admin/orders"
-                                    className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-lg transition"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <ShoppingBag size={18} className="text-[#D99A65]"/>
-                                        <span className="text-sm font-medium">View Orders</span>
-                                    </div>
-
-                                    <ArrowUpRight size={17} className="text-gray-400"/>
-                                </Link>
-
-
-                                <button
-                                    onClick={() => setShowAddAdmin(true)}
-                                    className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-lg transition"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <UserPlus size={18} className="text-[#D99A65]"/>
-                                        <span className="text-sm font-medium">Create Admin</span>
-                                    </div>
-
-                                    <ArrowUpRight size={17} className="text-gray-400"/>
-                                </button>
-
-                            </div>
+                            <Link to="/admin/products" className="flex items-center gap-2 text-orange-600 font-semibold text-sm mt-7">
+                                Manage inventory <ArrowUpRight size={16} />
+                            </Link>
 
                         </div>
 
-                    </section>
+                    </div>
 
 
+                    {/* RECENT PRODUCTS */}
+                    <section className="bg-white border border-gray-100 rounded-2xl mt-8 overflow-hidden">
 
-                    {/* RECENT ORDERS */}
-                    <section className="mt-8 bg-white border border-[#EAE8E3] rounded-xl overflow-hidden">
-
-                        <div className="p-6 md:p-8 flex items-center justify-between">
+                        <div className="p-6 md:p-7 flex flex-col md:flex-row md:items-center justify-between gap-4">
 
                             <div>
-                                <h3 className="text-lg font-semibold">
-                                    Recent Orders
+                                <h3 className="text-lg font-bold">
+                                    Recently Added Products
                                 </h3>
-
                                 <p className="text-sm text-gray-400 mt-1">
-                                    Keep track of the latest purchases.
+                                    Latest products added to your store.
                                 </p>
                             </div>
 
-                            <Link
-                                to="/admin/orders"
-                                className="text-sm font-semibold text-[#B77D50] flex items-center gap-2"
-                            >
-                                View All
-                                <ArrowUpRight size={16}/>
-                            </Link>
+                            <div className="flex items-center gap-3">
+
+                                <div className="relative">
+                                    <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    <input
+                                        value={search}
+                                        onChange={(e) => setSearch(e.target.value)}
+                                        placeholder="Search products"
+                                        className="w-full sm:w-52 pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm outline-none focus:border-orange-300"
+                                    />
+                                </div>
+
+                                <Link to="/admin/products" className="text-orange-600 text-sm font-semibold whitespace-nowrap">
+                                    View all
+                                </Link>
+
+                            </div>
 
                         </div>
 
@@ -632,37 +417,78 @@ const Admin = () => {
 
                             <table className="w-full text-left">
 
-                                <thead className="bg-[#F8F7F4]">
-
-                                    <tr className="text-[11px] uppercase tracking-wider text-gray-400">
-                                        <th className="px-6 py-4 font-semibold">Order ID</th>
-                                        <th className="px-6 py-4 font-semibold">Customer</th>
-                                        <th className="px-6 py-4 font-semibold">Amount</th>
-                                        <th className="px-6 py-4 font-semibold">Status</th>
+                                <thead className="bg-gray-50 text-[11px] uppercase tracking-wider text-gray-400">
+                                    <tr>
+                                        <th className="px-6 py-4">Product</th>
+                                        <th className="px-6 py-4">Category</th>
+                                        <th className="px-6 py-4">Price</th>
+                                        <th className="px-6 py-4">Stock</th>
+                                        <th className="px-6 py-4">Rating</th>
                                     </tr>
-
                                 </thead>
 
+                                <tbody className="divide-y divide-gray-100">
 
-                                <tbody>
+                                    {loading ? (
+                                        <tr>
+                                            <td colSpan="5" className="text-center py-12 text-gray-400">
+                                                Loading products...
+                                            </td>
+                                        </tr>
+                                    ) : filteredProducts.length === 0 ? (
+                                        <tr>
+                                            <td colSpan="5" className="text-center py-12 text-gray-400">
+                                                No products found.
+                                            </td>
+                                        </tr>
+                                    ) : (
 
-                                    <tr>
-                                        <td colSpan="4" className="text-center py-16">
+                                        filteredProducts.map((product) => (
 
-                                            <div className="flex flex-col items-center">
-                                                <ShoppingBag size={27} className="text-gray-300 mb-3"/>
+                                            <tr key={product._id} className="hover:bg-gray-50/70">
 
-                                                <p className="text-sm font-semibold text-gray-700">
-                                                    No orders yet
-                                                </p>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-3 min-w-[180px]">
 
-                                                <p className="text-xs text-gray-400 mt-2">
-                                                    Your latest orders will show up here.
-                                                </p>
-                                            </div>
+                                                        <img
+                                                            src={product.images?.[0] || "https://placehold.co/50"}
+                                                            alt={product.productName}
+                                                            className="w-11 h-11 rounded-lg object-cover bg-gray-100"
+                                                        />
 
-                                        </td>
-                                    </tr>
+                                                        <span className="font-semibold text-sm">
+                                                            {product.productName}
+                                                        </span>
+
+                                                    </div>
+                                                </td>
+
+                                                <td className="px-6 py-4 text-sm text-gray-500">
+                                                    {product.category}
+                                                </td>
+
+                                                <td className="px-6 py-4 text-sm font-semibold">
+                                                    ₹{product.discountprice ?? product.price}
+                                                </td>
+
+                                                <td className="px-6 py-4">
+                                                    <span className={`text-xs font-semibold px-3 py-1.5 rounded-full ${product.stock <= 5 ? "bg-red-50 text-red-600" : "bg-emerald-50 text-emerald-600"}`}>
+                                                        {product.stock} units
+                                                    </span>
+                                                </td>
+
+                                                <td className="px-6 py-4">
+                                                    <span className="flex items-center gap-1 text-sm">
+                                                        <Star size={15} className="text-orange-400 fill-orange-400" />
+                                                        {product.ratings || 0}
+                                                    </span>
+                                                </td>
+
+                                            </tr>
+
+                                        ))
+
+                                    )}
 
                                 </tbody>
 
@@ -673,188 +499,89 @@ const Admin = () => {
                     </section>
 
 
+                    {/* TOP RATED PRODUCTS */}
+                    <section className="mt-8">
+
+                        <div className="mb-5">
+                            <h3 className="text-lg font-bold">Top Rated Products</h3>
+                            <p className="text-sm text-gray-400 mt-1">
+                                Products with the highest customer ratings.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
+
+                            {(data?.topRatedProducts || []).map((product) => (
+
+                                <div key={product._id} className="bg-white border border-gray-100 rounded-xl p-4">
+
+                                    <img
+                                        src={product.images?.[0] || "https://placehold.co/200"}
+                                        alt={product.productName}
+                                        className="w-full h-36 object-cover rounded-lg bg-gray-100"
+                                    />
+
+                                    <h4 className="font-semibold text-sm mt-4 truncate">
+                                        {product.productName}
+                                    </h4>
+
+                                    <div className="flex items-center justify-between mt-3">
+                                        <span className="font-bold text-sm">
+                                            ₹{product.price}
+                                        </span>
+
+                                        <span className="flex items-center gap-1 text-xs text-orange-500">
+                                            <Star size={14} fill="currentColor" />
+                                            {product.ratings}
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            ))}
+
+                        </div>
+
+                        {!loading && (data?.topRatedProducts || []).length === 0 && (
+                            <p className="bg-white rounded-xl border border-gray-100 p-8 text-center text-sm text-gray-400">
+                                No rated products yet.
+                            </p>
+                        )}
+
+                    </section>
+
+
+                    {/* ORDERS PLACEHOLDER */}
+                    <section className="mt-8 bg-white border border-gray-100 rounded-2xl p-7">
+
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h3 className="font-bold text-lg">Recent Orders</h3>
+                                <p className="text-sm text-gray-400 mt-1">
+                                    Order management will be available when checkout is implemented.
+                                </p>
+                            </div>
+
+                            <ShoppingBag className="text-orange-500" size={24} />
+                        </div>
+
+                        <div className="text-center py-10 border-t border-gray-100 mt-6">
+                            <p className="font-semibold text-gray-700">
+                                No orders yet
+                            </p>
+                            <p className="text-xs text-gray-400 mt-2">
+                                Your customer purchases will appear here.
+                            </p>
+                        </div>
+
+                    </section>
+
                 </div>
 
             </main>
 
-
-
-            {/* ADD ADMIN MODAL */}
-            {showAddAdmin && (
-
-                <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-
-                    <div className="bg-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl max-h-[95vh] overflow-y-auto">
-
-                        <div className="bg-[#20211F] p-7 relative">
-
-                            <button
-                                onClick={() => setShowAddAdmin(false)}
-                                className="absolute top-6 right-6 text-gray-400 hover:text-white"
-                            >
-                                <X size={22}/>
-                            </button>
-
-                            <ShieldCheck size={30} className="text-[#D99A65] mb-5"/>
-
-                            <p className="text-[#D99A65] text-xs uppercase tracking-[2px] font-semibold">
-                                Administrator Access
-                            </p>
-
-                            <h2 className="text-2xl text-white font-semibold mt-2">
-                                Add New Admin
-                            </h2>
-
-                            <p className="text-gray-400 text-sm mt-2">
-                                Create a new administrator account.
-                            </p>
-
-                        </div>
-
-
-                        <form onSubmit={handleAddAdmin} className="p-7 space-y-5">
-
-                            <div>
-                                <label className="text-sm font-semibold block mb-2">
-                                    Full Name
-                                </label>
-
-                                <input
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    placeholder="Enter full name"
-                                    required
-                                    className="w-full p-3 border border-gray-200 rounded-lg text-sm outline-none focus:border-[#D99A65]"
-                                />
-                            </div>
-
-
-                            <div>
-                                <label className="text-sm font-semibold block mb-2">
-                                    Email Address
-                                </label>
-
-                                <div className="relative">
-                                    <Mail size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"/>
-
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        placeholder="admin@example.com"
-                                        required
-                                        className="w-full pl-10 p-3 border border-gray-200 rounded-lg text-sm outline-none focus:border-[#D99A65]"
-                                    />
-                                </div>
-                            </div>
-
-
-                            <div>
-                                <label className="text-sm font-semibold block mb-2">
-                                    Phone Number
-                                </label>
-
-                                <div className="relative">
-                                    <Phone size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"/>
-
-                                    <input
-                                        type="tel"
-                                        name="phone"
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                        placeholder="Phone number"
-                                        required
-                                        className="w-full pl-10 p-3 border border-gray-200 rounded-lg text-sm outline-none focus:border-[#D99A65]"
-                                    />
-                                </div>
-                            </div>
-
-
-                            <div>
-                                <label className="text-sm font-semibold block mb-2">
-                                    Password
-                                </label>
-
-                                <div className="relative">
-                                    <Lock size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"/>
-
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        name="password"
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                        placeholder="Create password"
-                                        minLength={8}
-                                        required
-                                        className="w-full pl-10 pr-11 p-3 border border-gray-200 rounded-lg text-sm outline-none focus:border-[#D99A65]"
-                                    />
-
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
-                                    >
-                                        {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
-                                    </button>
-                                </div>
-                            </div>
-
-
-                            <div className="bg-[#F8F7F4] p-4 rounded-lg flex gap-3">
-                                <ShieldCheck size={20} className="text-[#B77D50] shrink-0"/>
-
-                                <p className="text-xs text-gray-500 leading-relaxed">
-                                    The new account will have administrator privileges. Only authorized admins should be allowed to create accounts.
-                                </p>
-                            </div>
-
-
-                            <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
-
-                                <button
-                                    type="button"
-                                    disabled={loading}
-                                    onClick={() => setShowAddAdmin(false)}
-                                    className="flex-1 border border-gray-200 py-3 rounded-lg text-sm font-semibold hover:bg-gray-50 disabled:opacity-50"
-                                >
-                                    Cancel
-                                </button>
-
-
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="flex-1 bg-[#20211F] text-white py-3 rounded-lg text-sm font-semibold hover:bg-[#D99A65] hover:text-[#20211F] transition flex items-center justify-center gap-2 disabled:opacity-50"
-                                >
-                                    {loading ? (
-                                        <>
-                                            <Loader2 size={17} className="animate-spin"/>
-                                            Creating...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <UserPlus size={17}/>
-                                            Create Admin
-                                        </>
-                                    )}
-                                </button>
-
-                            </div>
-
-                        </form>
-
-                    </div>
-
-                </div>
-
-            )}
-
         </div>
-
     );
-
 };
 
 export default Admin;
