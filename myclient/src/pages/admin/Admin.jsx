@@ -3,36 +3,43 @@ import React, { useState } from "react";
 import {
     LayoutDashboard,
     Package,
-    ShoppingCart,
+    ShoppingBag,
     Users,
-    UserPlus,
+    ShieldCheck,
     Settings,
     LogOut,
-    Menu,
     Bell,
     Search,
+    Menu,
+    X,
+    Plus,
+    ChevronDown,
+    ChevronRight,
+    ArrowUpRight,
     IndianRupee,
     TrendingUp,
-    X,
-    ShieldCheck,
+    TrendingDown,
+    ShoppingCart,
+    UserPlus,
+    MoreHorizontal,
+    CalendarDays,
     Eye,
     EyeOff,
-    ArrowUpRight,
-    Plus,
-    ChevronRight,
     Mail,
     Phone,
     Lock,
-    Loader2,
-    Store
+    Loader2
 } from "lucide-react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const Admin = () => {
 
+    const navigate = useNavigate();
+
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [productOpen, setProductOpen] = useState(false);
     const [showAddAdmin, setShowAddAdmin] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -45,15 +52,14 @@ const Admin = () => {
     });
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value
-        }));
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
     };
 
-    // ADD NEW ADMIN
+
+    // CREATE ADMIN
     const handleAddAdmin = async (e) => {
         e.preventDefault();
 
@@ -76,7 +82,7 @@ const Admin = () => {
 
             if (res.ok && data.success) {
 
-                toast.success("New admin created successfully!");
+                toast.success("Admin created successfully!");
 
                 setFormData({
                     name: "",
@@ -88,20 +94,14 @@ const Admin = () => {
                 setShowAddAdmin(false);
 
             } else {
-
-                toast.error(data.message || "Failed to create admin!");
-
+                toast.error(data.message || "Admin creation failed!");
             }
 
         } catch (error) {
-
-            console.log("Add Admin Error:", error);
+            console.log(error);
             toast.error("Something went wrong!");
-
         } finally {
-
             setLoading(false);
-
         }
     };
 
@@ -110,74 +110,50 @@ const Admin = () => {
         {
             title: "Total Revenue",
             value: "₹0",
-            description: "Store revenue",
+            change: "Store revenue",
             icon: IndianRupee,
-            color: "bg-emerald-50 text-emerald-600",
-            trend: true
+            color: "text-emerald-600",
+            bg: "bg-emerald-50"
         },
         {
             title: "Total Orders",
             value: "0",
-            description: "All customer orders",
+            change: "All customer orders",
             icon: ShoppingCart,
-            color: "bg-blue-50 text-blue-600"
+            color: "text-blue-600",
+            bg: "bg-blue-50"
         },
         {
             title: "Total Products",
             value: "0",
-            description: "Products in store",
+            change: "Products available",
             icon: Package,
-            color: "bg-orange-50 text-orange-600"
+            color: "text-orange-600",
+            bg: "bg-orange-50"
         },
         {
             title: "Total Customers",
             value: "0",
-            description: "Registered customers",
+            change: "Registered customers",
             icon: Users,
-            color: "bg-purple-50 text-purple-600"
+            color: "text-purple-600",
+            bg: "bg-purple-50"
         }
     ];
 
 
-    const navItems = [
-        {
-            name: "Dashboard",
-            icon: LayoutDashboard,
-            path: "/admin",
-            active: true
-        },
-        {
-            name: "Products",
-            icon: Package,
-            path: "/admin/products"
-        },
-        {
-            name: "Orders",
-            icon: ShoppingCart,
-            path: "/admin/orders"
-        },
-        {
-            name: "Customers",
-            icon: Users,
-            path: "/admin/users"
-        },
-        {
-            name: "Add Product",
-            icon: Plus,
-            path: "/admin/add-product"
-        }
-    ];
+    const closeSidebar = () => setSidebarOpen(false);
 
 
     return (
 
-        <div className="min-h-screen bg-[#f7f7f8] flex text-gray-900">
+        <div className="min-h-screen bg-[#F6F5F2] flex font-sans text-[#242424]">
 
             {/* MOBILE OVERLAY */}
             {sidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-                    onClick={() => setSidebarOpen(false)}
+                    onClick={closeSidebar}
+                    className="fixed inset-0 bg-black/40 z-40 lg:hidden"
                 />
             )}
 
@@ -185,121 +161,176 @@ const Admin = () => {
             {/* SIDEBAR */}
             <aside className={`
                 fixed lg:sticky top-0 left-0 z-50
-                w-[260px] h-screen
-                bg-[#171717] text-white
+                h-screen w-[270px] shrink-0
+                bg-[#20211F] text-white
                 flex flex-col
                 transition-transform duration-300
-                ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+                ${sidebarOpen
+                    ? "translate-x-0"
+                    : "-translate-x-full lg:translate-x-0"}
             `}>
 
-                <div className="px-7 py-8 flex justify-between items-center">
+                {/* BRAND */}
+                <div className="h-24 px-8 flex items-center justify-between border-b border-white/10">
 
-                    <Link to="/admin" className="text-2xl font-bold tracking-tight">
-                        Shopes<span className="text-orange-500">too.</span>
+                    <Link to="/admin" className="text-2xl tracking-tight font-bold">
+                        shopes<span className="text-[#D99A65]">too.</span>
                     </Link>
 
                     <button
-                        onClick={() => setSidebarOpen(false)}
+                        onClick={closeSidebar}
                         className="lg:hidden text-gray-400"
                     >
-                        <X size={22} />
+                        <X size={22}/>
                     </button>
 
                 </div>
 
 
-                <div className="px-5 flex-1">
+                {/* NAVIGATION */}
+                <div className="flex-1 overflow-y-auto px-5 py-8">
 
-                    <p className="text-[10px] tracking-[2px] uppercase text-gray-500 font-semibold px-3 mb-5">
-                        Main Menu
+                    <p className="text-[10px] tracking-[2.5px] text-gray-500 font-semibold mb-5 px-3">
+                        WORKSPACE
                     </p>
 
-                    <nav className="space-y-1">
 
-                        {navItems.map((item) => {
+                    <nav className="space-y-2">
 
-                            const Icon = item.icon;
+                        <Link
+                            to="/admin"
+                            onClick={closeSidebar}
+                            className="flex items-center gap-3 px-4 py-3.5 rounded-lg bg-[#D99A65] text-[#20211F] text-sm font-semibold"
+                        >
+                            <LayoutDashboard size={19}/>
+                            Overview
+                        </Link>
 
-                            return (
 
-                                <Link
-                                    key={item.name}
-                                    to={item.path}
-                                    onClick={() => setSidebarOpen(false)}
-                                    className={`
-                                        flex items-center gap-3 px-4 py-3.5
-                                        rounded-xl text-sm font-medium
-                                        transition-all
-                                        ${item.active
-                                            ? "bg-orange-500 text-white shadow-lg shadow-orange-500/20"
-                                            : "text-gray-400 hover:bg-white/5 hover:text-white"
-                                        }
-                                    `}
-                                >
-                                    <Icon size={19} />
-                                    {item.name}
+                        {/* PRODUCTS DROPDOWN */}
+                        <div>
 
-                                    {item.active && (
-                                        <ChevronRight size={16} className="ml-auto" />
-                                    )}
+                            <button
+                                onClick={() => setProductOpen(!productOpen)}
+                                className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
+                            >
+                                <Package size={19}/>
+                                <span className="flex-1 text-left">Products</span>
+                                <ChevronDown
+                                    size={16}
+                                    className={`transition-transform ${productOpen ? "rotate-180" : ""}`}
+                                />
+                            </button>
 
-                                </Link>
 
-                            );
+                            {productOpen && (
 
-                        })}
+                                <div className="ml-6 pl-5 border-l border-white/10 mt-2 space-y-1">
+
+                                    <Link
+                                        to="/admin/products"
+                                        onClick={closeSidebar}
+                                        className="block px-3 py-2.5 text-sm text-gray-400 hover:text-[#D99A65]"
+                                    >
+                                        All Products
+                                    </Link>
+
+                                    <Link
+                                        to="/admin/add-product"
+                                        onClick={closeSidebar}
+                                        className="block px-3 py-2.5 text-sm text-gray-400 hover:text-[#D99A65]"
+                                    >
+                                        Add New Product
+                                    </Link>
+
+                                    <Link
+                                        to="/admin/categories"
+                                        onClick={closeSidebar}
+                                        className="block px-3 py-2.5 text-sm text-gray-400 hover:text-[#D99A65]"
+                                    >
+                                        Categories
+                                    </Link>
+
+                                </div>
+
+                            )}
+
+                        </div>
+
+
+                        <Link
+                            to="/admin/orders"
+                            onClick={closeSidebar}
+                            className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
+                        >
+                            <ShoppingBag size={19}/>
+                            Orders
+                        </Link>
+
+
+                        <Link
+                            to="/admin/users"
+                            onClick={closeSidebar}
+                            className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
+                        >
+                            <Users size={19}/>
+                            Customers
+                        </Link>
 
                     </nav>
 
 
-                    <p className="text-[10px] tracking-[2px] uppercase text-gray-500 font-semibold px-3 mt-10 mb-5">
-                        Management
-                    </p>
+                    <div className="mt-12">
 
-                    <button
-                        onClick={() => {
-                            setShowAddAdmin(true);
-                            setSidebarOpen(false);
-                        }}
-                        className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-all"
-                    >
-                        <UserPlus size={19} />
-                        Add New Admin
-                    </button>
+                        <p className="text-[10px] tracking-[2.5px] text-gray-500 font-semibold mb-5 px-3">
+                            ADMINISTRATION
+                        </p>
 
-                    <button
-                        className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-all"
-                    >
-                        <ShieldCheck size={19} />
-                        Admin Access
-                    </button>
+
+                        <button
+                            onClick={() => {
+                                setShowAddAdmin(true);
+                                closeSidebar();
+                            }}
+                            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
+                        >
+                            <ShieldCheck size={19}/>
+                            Admin Management
+                        </button>
+
+
+                        <button
+                            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
+                        >
+                            <Settings size={19}/>
+                            Settings
+                        </button>
+
+                    </div>
 
                 </div>
 
 
-                {/* SIDEBAR BOTTOM */}
-                <div className="p-5 border-t border-white/10 space-y-2">
+                {/* SIDEBAR FOOTER */}
+                <div className="p-5 border-t border-white/10">
 
-                    <button className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white rounded-xl hover:bg-white/5">
-                        <Settings size={19} />
-                        Settings
-                    </button>
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
 
-                    <button className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 rounded-xl">
-                        <LogOut size={19} />
-                        Logout
-                    </button>
-
-                    <div className="flex items-center gap-3 px-3 pt-5">
-
-                        <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center font-bold text-white">
+                        <div className="w-10 h-10 rounded-full bg-[#D99A65] text-[#20211F] flex items-center justify-center font-bold">
                             A
                         </div>
 
-                        <div>
+                        <div className="flex-1 min-w-0">
                             <p className="text-sm font-semibold">Administrator</p>
-                            <p className="text-xs text-gray-500">Store Manager</p>
+                            <p className="text-xs text-gray-500">Store Admin</p>
                         </div>
+
+                        <button
+                            onClick={() => toast("Connect your logout function here")}
+                            className="text-gray-500 hover:text-red-400"
+                        >
+                            <LogOut size={18}/>
+                        </button>
 
                     </div>
 
@@ -309,60 +340,56 @@ const Admin = () => {
 
 
 
-            {/* MAIN CONTENT */}
+            {/* MAIN AREA */}
             <main className="flex-1 min-w-0">
 
 
-                {/* TOP NAVBAR */}
-                <header className="h-[85px] bg-white border-b border-gray-100 px-5 md:px-8 flex items-center justify-between sticky top-0 z-30">
+                {/* HEADER */}
+                <header className="h-[82px] bg-white/80 backdrop-blur-xl border-b border-[#EAE8E3] px-5 md:px-10 flex items-center justify-between sticky top-0 z-30">
 
                     <div className="flex items-center gap-4">
 
                         <button
                             onClick={() => setSidebarOpen(true)}
-                            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
+                            className="lg:hidden"
                         >
-                            <Menu size={22} />
+                            <Menu size={23}/>
                         </button>
 
                         <div>
-                            <h1 className="text-xl md:text-2xl font-bold tracking-tight">
-                                Dashboard
-                            </h1>
-
-                            <p className="text-xs md:text-sm text-gray-400 mt-1">
-                                Welcome back to Shopestoo.
+                            <p className="text-[10px] uppercase tracking-[2px] text-gray-400 font-semibold">
+                                Shopestoo / Workspace
                             </p>
+
+                            <h1 className="text-lg font-semibold mt-1">
+                                Overview
+                            </h1>
                         </div>
 
                     </div>
 
 
-                    <div className="flex items-center gap-3 md:gap-5">
+                    <div className="flex items-center gap-3 md:gap-6">
 
-                        <div className="relative hidden md:block">
+                        <div className="hidden md:flex items-center bg-[#F6F5F2] px-4 py-2.5 rounded-lg w-64">
 
-                            <Search
-                                size={18}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                            />
+                            <Search size={17} className="text-gray-400"/>
 
                             <input
-                                type="text"
-                                placeholder="Search anything..."
-                                className="w-64 bg-gray-50 border border-gray-100 rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:border-orange-300 transition"
+                                placeholder="Search..."
+                                className="bg-transparent outline-none text-sm ml-3 w-full"
                             />
 
                         </div>
 
 
-                        <button className="relative p-2.5 rounded-xl hover:bg-gray-100">
-                            <Bell size={21} className="text-gray-600" />
-                            <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-orange-500 border-2 border-white" />
+                        <button className="relative p-2 text-gray-500 hover:text-black">
+                            <Bell size={20}/>
+                            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#D99A65]"/>
                         </button>
 
 
-                        <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold">
+                        <div className="w-9 h-9 rounded-full bg-[#E9D5C3] flex items-center justify-center text-sm font-bold">
                             A
                         </div>
 
@@ -372,42 +399,54 @@ const Admin = () => {
 
 
 
-                {/* DASHBOARD BODY */}
-                <section className="p-5 md:p-8 max-w-[1600px] mx-auto">
+                {/* CONTENT */}
+                <div className="max-w-[1550px] mx-auto px-5 md:px-10 py-10">
 
 
-                    {/* PAGE INTRO */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-9">
+                    {/* WELCOME SECTION */}
+                    <section className="flex flex-col xl:flex-row xl:items-end justify-between gap-6 mb-10">
 
                         <div>
-                            <p className="text-orange-500 text-xs font-bold uppercase tracking-[2px] mb-2">
-                                Store Overview
+
+                            <p className="text-[#B77D50] text-xs uppercase tracking-[3px] font-semibold mb-4">
+                                Dashboard
                             </p>
 
-                            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
-                                Welcome back, Admin.
+                            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
+                                Good to see you, Admin.
                             </h2>
 
-                            <p className="text-gray-400 text-sm mt-2">
-                                Here's what's happening with your store today.
+                            <p className="text-gray-500 text-sm mt-3">
+                                Here's a look at what's happening across your store.
                             </p>
+
                         </div>
 
 
-                        <button
-                            onClick={() => setShowAddAdmin(true)}
-                            className="flex items-center justify-center gap-2 bg-[#171717] hover:bg-orange-500 text-white px-5 py-3 rounded-xl text-sm font-semibold transition-all"
-                        >
-                            <UserPlus size={18} />
-                            Add New Admin
-                        </button>
+                        <div className="flex items-center gap-3">
 
-                    </div>
+                            <div className="flex items-center gap-2 px-4 py-3 bg-white border border-[#EAE8E3] rounded-lg text-sm text-gray-500">
+                                <CalendarDays size={17}/>
+                                Store Overview
+                            </div>
+
+                            <button
+                                onClick={() => navigate("/admin/products")}
+                                className="flex items-center gap-2 px-5 py-3 bg-[#20211F] hover:bg-[#D99A65] hover:text-[#20211F] text-white rounded-lg text-sm font-semibold transition"
+                            >
+                                <Package size={17}/>
+                                Products
+                                <ArrowUpRight size={15}/>
+                            </button>
+
+                        </div>
+
+                    </section>
 
 
 
-                    {/* STAT CARDS */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+                    {/* STATS */}
+                    <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
 
                         {stats.map((stat) => {
 
@@ -417,37 +456,29 @@ const Admin = () => {
 
                                 <div
                                     key={stat.title}
-                                    className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-lg hover:shadow-gray-200/50 transition-all"
+                                    className="bg-white p-6 rounded-xl border border-[#EAE8E3] hover:shadow-md transition"
                                 >
 
-                                    <div className="flex items-center justify-between">
+                                    <div className="flex justify-between items-center">
 
-                                        <div>
-                                            <p className="text-sm text-gray-400 font-medium">
-                                                {stat.title}
-                                            </p>
+                                        <span className="text-sm text-gray-500 font-medium">
+                                            {stat.title}
+                                        </span>
 
-                                            <h3 className="text-3xl font-bold mt-3 tracking-tight">
-                                                {stat.value}
-                                            </h3>
-                                        </div>
-
-
-                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.color}`}>
-                                            <Icon size={23} />
+                                        <div className={`w-10 h-10 flex items-center justify-center rounded-lg ${stat.bg} ${stat.color}`}>
+                                            <Icon size={20}/>
                                         </div>
 
                                     </div>
 
 
-                                    <div className="mt-6 flex items-center gap-2 text-xs text-gray-400">
+                                    <h3 className="text-3xl font-semibold mt-6 tracking-tight">
+                                        {stat.value}
+                                    </h3>
 
-                                        {stat.trend && (
-                                            <TrendingUp size={15} className="text-emerald-500" />
-                                        )}
 
-                                        {stat.description}
-
+                                    <div className="flex items-center gap-2 mt-4 text-xs text-gray-400">
+                                        {stat.change}
                                     </div>
 
                                 </div>
@@ -456,105 +487,142 @@ const Admin = () => {
 
                         })}
 
-                    </div>
+                    </section>
 
 
 
-                    {/* QUICK ACTIONS */}
-                    <div className="mt-9">
+                    {/* MAIN DASHBOARD GRID */}
+                    <section className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-8">
 
-                        <div className="mb-5">
-                            <h2 className="text-lg font-bold">Quick Actions</h2>
-                            <p className="text-sm text-gray-400 mt-1">
-                                Manage your store with ease.
+
+                        {/* REVENUE PANEL */}
+                        <div className="xl:col-span-2 bg-white rounded-xl border border-[#EAE8E3] p-6 md:p-8">
+
+                            <div className="flex items-center justify-between">
+
+                                <div>
+                                    <p className="text-sm text-gray-500">
+                                        Revenue Overview
+                                    </p>
+
+                                    <h3 className="text-3xl font-semibold mt-2">
+                                        ₹0.00
+                                    </h3>
+                                </div>
+
+                                <button className="text-gray-400 hover:text-black">
+                                    <MoreHorizontal size={23}/>
+                                </button>
+
+                            </div>
+
+
+                            <div className="h-[220px] mt-8 flex flex-col items-center justify-center border-t border-[#F0EFEB]">
+
+                                <div className="w-12 h-12 rounded-full bg-[#F6F5F2] flex items-center justify-center mb-4">
+                                    <TrendingUp size={22} className="text-[#B77D50]"/>
+                                </div>
+
+                                <p className="text-sm font-medium text-gray-700">
+                                    Revenue analytics will appear here
+                                </p>
+
+                                <p className="text-xs text-gray-400 mt-2">
+                                    Waiting for your first store transactions.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+
+                        {/* QUICK ACTIONS */}
+                        <div className="bg-[#20211F] text-white rounded-xl p-7">
+
+                            <p className="text-xs uppercase tracking-[2px] text-[#D99A65] font-semibold">
+                                Shortcuts
                             </p>
-                        </div>
+
+                            <h3 className="text-2xl font-semibold mt-3">
+                                Manage your store.
+                            </h3>
+
+                            <p className="text-gray-400 text-sm mt-2">
+                                Everything you need to keep things running.
+                            </p>
 
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                            <div className="space-y-3 mt-8">
 
 
-                            {/* ADD PRODUCT */}
-                            <Link
-                                to="/admin/add-product"
-                                className="bg-white border border-gray-100 p-5 rounded-2xl flex items-center gap-4 hover:border-orange-200 hover:shadow-md transition"
-                            >
-                                <div className="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
-                                    <Package size={23} />
-                                </div>
+                                <Link
+                                    to="/admin/add-product"
+                                    className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-lg transition"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <Plus size={18} className="text-[#D99A65]"/>
+                                        <span className="text-sm font-medium">Add Product</span>
+                                    </div>
 
-                                <div className="flex-1">
-                                    <h3 className="font-semibold text-sm">Add Product</h3>
-                                    <p className="text-xs text-gray-400 mt-1">Add products to your store</p>
-                                </div>
-
-                                <ArrowUpRight size={19} className="text-gray-400" />
-                            </Link>
+                                    <ArrowUpRight size={17} className="text-gray-400"/>
+                                </Link>
 
 
-                            {/* VIEW ORDERS */}
-                            <Link
-                                to="/admin/orders"
-                                className="bg-white border border-gray-100 p-5 rounded-2xl flex items-center gap-4 hover:border-orange-200 hover:shadow-md transition"
-                            >
-                                <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                                    <ShoppingCart size={23} />
-                                </div>
+                                <Link
+                                    to="/admin/orders"
+                                    className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-lg transition"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <ShoppingBag size={18} className="text-[#D99A65]"/>
+                                        <span className="text-sm font-medium">View Orders</span>
+                                    </div>
 
-                                <div className="flex-1">
-                                    <h3 className="font-semibold text-sm">Manage Orders</h3>
-                                    <p className="text-xs text-gray-400 mt-1">Track customer purchases</p>
-                                </div>
-
-                                <ArrowUpRight size={19} className="text-gray-400" />
-                            </Link>
+                                    <ArrowUpRight size={17} className="text-gray-400"/>
+                                </Link>
 
 
-                            {/* ADD ADMIN */}
-                            <button
-                                onClick={() => setShowAddAdmin(true)}
-                                className="bg-white border border-gray-100 p-5 rounded-2xl flex items-center gap-4 text-left hover:border-orange-200 hover:shadow-md transition"
-                            >
-                                <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-                                    <ShieldCheck size={23} />
-                                </div>
+                                <button
+                                    onClick={() => setShowAddAdmin(true)}
+                                    className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-lg transition"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <UserPlus size={18} className="text-[#D99A65]"/>
+                                        <span className="text-sm font-medium">Create Admin</span>
+                                    </div>
 
-                                <div className="flex-1">
-                                    <h3 className="font-semibold text-sm">Create Admin</h3>
-                                    <p className="text-xs text-gray-400 mt-1">Add another administrator</p>
-                                </div>
+                                    <ArrowUpRight size={17} className="text-gray-400"/>
+                                </button>
 
-                                <ArrowUpRight size={19} className="text-gray-400" />
-                            </button>
-
+                            </div>
 
                         </div>
 
-                    </div>
+                    </section>
 
 
 
                     {/* RECENT ORDERS */}
-                    <div className="bg-white border border-gray-100 rounded-2xl mt-9 overflow-hidden">
+                    <section className="mt-8 bg-white border border-[#EAE8E3] rounded-xl overflow-hidden">
 
-                        <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="p-6 md:p-8 flex items-center justify-between">
 
                             <div>
-                                <h2 className="text-lg font-bold">
+                                <h3 className="text-lg font-semibold">
                                     Recent Orders
-                                </h2>
+                                </h3>
 
                                 <p className="text-sm text-gray-400 mt-1">
-                                    Latest customer purchases
+                                    Keep track of the latest purchases.
                                 </p>
                             </div>
 
                             <Link
                                 to="/admin/orders"
-                                className="text-orange-500 text-sm font-semibold flex items-center gap-1"
+                                className="text-sm font-semibold text-[#B77D50] flex items-center gap-2"
                             >
                                 View All
-                                <ArrowUpRight size={16} />
+                                <ArrowUpRight size={16}/>
                             </Link>
 
                         </div>
@@ -564,13 +632,15 @@ const Admin = () => {
 
                             <table className="w-full text-left">
 
-                                <thead>
-                                    <tr className="bg-gray-50 text-gray-400 text-xs uppercase tracking-wider">
+                                <thead className="bg-[#F8F7F4]">
+
+                                    <tr className="text-[11px] uppercase tracking-wider text-gray-400">
                                         <th className="px-6 py-4 font-semibold">Order ID</th>
                                         <th className="px-6 py-4 font-semibold">Customer</th>
                                         <th className="px-6 py-4 font-semibold">Amount</th>
                                         <th className="px-6 py-4 font-semibold">Status</th>
                                     </tr>
+
                                 </thead>
 
 
@@ -580,19 +650,15 @@ const Admin = () => {
                                         <td colSpan="4" className="text-center py-16">
 
                                             <div className="flex flex-col items-center">
+                                                <ShoppingBag size={27} className="text-gray-300 mb-3"/>
 
-                                                <div className="w-14 h-14 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-                                                    <Store size={24} className="text-gray-300" />
-                                                </div>
-
-                                                <p className="font-semibold text-gray-700 text-sm">
+                                                <p className="text-sm font-semibold text-gray-700">
                                                     No orders yet
                                                 </p>
 
-                                                <p className="text-xs text-gray-400 mt-1">
-                                                    New customer orders will appear here.
+                                                <p className="text-xs text-gray-400 mt-2">
+                                                    Your latest orders will show up here.
                                                 </p>
-
                                             </div>
 
                                         </td>
@@ -604,10 +670,10 @@ const Admin = () => {
 
                         </div>
 
-                    </div>
+                    </section>
 
 
-                </section>
+                </div>
 
             </main>
 
@@ -618,82 +684,59 @@ const Admin = () => {
 
                 <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
 
-                    <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden max-h-[95vh] overflow-y-auto">
+                    <div className="bg-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl max-h-[95vh] overflow-y-auto">
 
-
-                        {/* MODAL HEADER */}
-                        <div className="bg-[#171717] px-7 py-7 relative">
+                        <div className="bg-[#20211F] p-7 relative">
 
                             <button
                                 onClick={() => setShowAddAdmin(false)}
-                                className="absolute right-6 top-6 text-gray-400 hover:text-white transition"
+                                className="absolute top-6 right-6 text-gray-400 hover:text-white"
                             >
-                                <X size={22} />
+                                <X size={22}/>
                             </button>
 
+                            <ShieldCheck size={30} className="text-[#D99A65] mb-5"/>
 
-                            <div className="w-12 h-12 bg-orange-500/15 text-orange-400 rounded-xl flex items-center justify-center mb-5">
-                                <ShieldCheck size={25} />
-                            </div>
-
-
-                            <p className="text-orange-400 text-xs uppercase tracking-[2px] font-bold">
-                                Admin Management
+                            <p className="text-[#D99A65] text-xs uppercase tracking-[2px] font-semibold">
+                                Administrator Access
                             </p>
 
-                            <h2 className="text-2xl font-bold text-white mt-2">
-                                Create New Admin
+                            <h2 className="text-2xl text-white font-semibold mt-2">
+                                Add New Admin
                             </h2>
 
-                            <p className="text-sm text-gray-400 mt-2">
-                                Give a new administrator access to Shopestoo.
+                            <p className="text-gray-400 text-sm mt-2">
+                                Create a new administrator account.
                             </p>
 
                         </div>
 
 
-
-                        {/* MODAL FORM */}
                         <form onSubmit={handleAddAdmin} className="p-7 space-y-5">
 
-
-                            {/* NAME */}
                             <div>
-
-                                <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                                <label className="text-sm font-semibold block mb-2">
                                     Full Name
                                 </label>
 
-                                <div className="relative">
-
-                                    <Users size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        placeholder="Enter admin name"
-                                        required
-                                        className="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition"
-                                    />
-
-                                </div>
-
+                                <input
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    placeholder="Enter full name"
+                                    required
+                                    className="w-full p-3 border border-gray-200 rounded-lg text-sm outline-none focus:border-[#D99A65]"
+                                />
                             </div>
 
 
-
-                            {/* EMAIL */}
                             <div>
-
-                                <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                                <label className="text-sm font-semibold block mb-2">
                                     Email Address
                                 </label>
 
                                 <div className="relative">
-
-                                    <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    <Mail size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"/>
 
                                     <input
                                         type="email"
@@ -702,103 +745,79 @@ const Admin = () => {
                                         onChange={handleChange}
                                         placeholder="admin@example.com"
                                         required
-                                        className="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition"
+                                        className="w-full pl-10 p-3 border border-gray-200 rounded-lg text-sm outline-none focus:border-[#D99A65]"
                                     />
-
                                 </div>
-
                             </div>
 
 
-
-                            {/* PHONE */}
                             <div>
-
-                                <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                                <label className="text-sm font-semibold block mb-2">
                                     Phone Number
                                 </label>
 
                                 <div className="relative">
-
-                                    <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    <Phone size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"/>
 
                                     <input
                                         type="tel"
                                         name="phone"
                                         value={formData.phone}
                                         onChange={handleChange}
-                                        placeholder="Enter phone number"
+                                        placeholder="Phone number"
                                         required
-                                        className="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition"
+                                        className="w-full pl-10 p-3 border border-gray-200 rounded-lg text-sm outline-none focus:border-[#D99A65]"
                                     />
-
                                 </div>
-
                             </div>
 
 
-
-                            {/* PASSWORD */}
                             <div>
-
-                                <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                                <label className="text-sm font-semibold block mb-2">
                                     Password
                                 </label>
 
                                 <div className="relative">
-
-                                    <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    <Lock size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"/>
 
                                     <input
                                         type={showPassword ? "text" : "password"}
                                         name="password"
                                         value={formData.password}
                                         onChange={handleChange}
-                                        placeholder="Create a strong password"
+                                        placeholder="Create password"
                                         minLength={8}
                                         required
-                                        className="w-full border border-gray-200 rounded-xl pl-11 pr-12 py-3 text-sm outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition"
+                                        className="w-full pl-10 pr-11 p-3 border border-gray-200 rounded-lg text-sm outline-none focus:border-[#D99A65]"
                                     />
 
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
                                     >
-                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
                                     </button>
-
                                 </div>
-
-                                <p className="text-xs text-gray-400 mt-2">
-                                    Use at least 8 characters.
-                                </p>
-
                             </div>
 
 
+                            <div className="bg-[#F8F7F4] p-4 rounded-lg flex gap-3">
+                                <ShieldCheck size={20} className="text-[#B77D50] shrink-0"/>
 
-                            {/* SECURITY NOTICE */}
-                            <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 flex gap-3">
-
-                                <ShieldCheck size={20} className="text-orange-500 shrink-0" />
-
-                                <p className="text-xs text-orange-800 leading-relaxed">
-                                    This account will be registered as an administrator and will have access to protected admin features.
+                                <p className="text-xs text-gray-500 leading-relaxed">
+                                    The new account will have administrator privileges. Only authorized admins should be allowed to create accounts.
                                 </p>
-
                             </div>
 
 
-
-                            {/* BUTTONS */}
                             <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
 
                                 <button
                                     type="button"
                                     disabled={loading}
                                     onClick={() => setShowAddAdmin(false)}
-                                    className="flex-1 border border-gray-200 rounded-xl py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition disabled:opacity-50"
+                                    className="flex-1 border border-gray-200 py-3 rounded-lg text-sm font-semibold hover:bg-gray-50 disabled:opacity-50"
                                 >
                                     Cancel
                                 </button>
@@ -807,25 +826,22 @@ const Admin = () => {
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="flex-1 bg-orange-500 hover:bg-orange-600 text-white rounded-xl py-3 text-sm font-semibold flex items-center justify-center gap-2 transition disabled:opacity-60"
+                                    className="flex-1 bg-[#20211F] text-white py-3 rounded-lg text-sm font-semibold hover:bg-[#D99A65] hover:text-[#20211F] transition flex items-center justify-center gap-2 disabled:opacity-50"
                                 >
-
                                     {loading ? (
                                         <>
-                                            <Loader2 size={18} className="animate-spin" />
+                                            <Loader2 size={17} className="animate-spin"/>
                                             Creating...
                                         </>
                                     ) : (
                                         <>
-                                            <UserPlus size={18} />
+                                            <UserPlus size={17}/>
                                             Create Admin
                                         </>
                                     )}
-
                                 </button>
 
                             </div>
-
 
                         </form>
 
