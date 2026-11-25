@@ -22,7 +22,8 @@ import {
     TrendingUp,
     ChevronRight,
     Activity,
-    Crown
+    Crown,
+    CircleHelp
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
@@ -31,7 +32,6 @@ import toast from "react-hot-toast";
 const API = import.meta.env.VITE_API_URL;
 
 const Admin = () => {
-
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -52,7 +52,6 @@ const Admin = () => {
             }
 
             setData(result);
-
         } catch (error) {
             console.log(error);
             toast.error(error.message || "Unable to load dashboard");
@@ -71,36 +70,36 @@ const Admin = () => {
             value: `₹${(data?.stats?.totalRevenue || 0).toLocaleString("en-IN")}`,
             description: "Revenue recorded by your store",
             icon: IndianRupee,
-            bg: "bg-orange-50",
             color: "text-orange-600",
-            accent: "bg-orange-500"
+            bg: "bg-orange-50",
+            gradient: "from-orange-500/10 to-orange-50"
         },
         {
             title: "Total Products",
             value: data?.stats?.totalProducts ?? 0,
             description: `${(data?.stats?.totalStock || 0).toLocaleString("en-IN")} units in inventory`,
             icon: Package,
-            bg: "bg-blue-50",
             color: "text-blue-600",
-            accent: "bg-blue-500"
+            bg: "bg-blue-50",
+            gradient: "from-blue-500/10 to-blue-50"
         },
         {
             title: "Total Customers",
             value: data?.stats?.totalCustomers ?? 0,
             description: "Registered customer accounts",
             icon: Users,
-            bg: "bg-purple-50",
             color: "text-purple-600",
-            accent: "bg-purple-500"
+            bg: "bg-purple-50",
+            gradient: "from-purple-500/10 to-purple-50"
         },
         {
             title: "Total Admins",
             value: data?.stats?.totalAdmins ?? 0,
             description: "Store administrators",
             icon: ShieldCheck,
-            bg: "bg-emerald-50",
             color: "text-emerald-600",
-            accent: "bg-emerald-500"
+            bg: "bg-emerald-50",
+            gradient: "from-emerald-500/10 to-emerald-50"
         }
     ];
 
@@ -118,6 +117,22 @@ const Admin = () => {
     const formatPrice = (price) =>
         `₹${(Number(price) || 0).toLocaleString("en-IN")}`;
 
+    const NavLink = ({ to, icon: Icon, children, active = false }) => (
+        <Link
+            to={to}
+            onClick={() => setSidebarOpen(false)}
+            className={`group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                active
+                    ? "bg-[#F97316] text-white shadow-lg shadow-orange-900/20"
+                    : "text-gray-400 hover:bg-white/[0.07] hover:text-white"
+            }`}
+        >
+            <Icon size={19} strokeWidth={1.8} />
+            <span>{children}</span>
+            {active && <ChevronRight size={16} className="ml-auto" />}
+        </Link>
+    );
+
     return (
         <div className="min-h-screen bg-[#F7F7F8] text-[#171717] flex">
 
@@ -125,29 +140,28 @@ const Admin = () => {
             {sidebarOpen && (
                 <div
                     onClick={() => setSidebarOpen(false)}
-                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                    className="fixed inset-0 bg-black/60 z-40 lg:hidden"
                 />
             )}
 
             {/* SIDEBAR */}
-            <aside className={`
-                fixed lg:sticky top-0 left-0 z-50
-                h-screen w-[260px] shrink-0
-                bg-[#101010] text-white
-                flex flex-col
-                transition-transform duration-300
-                ${sidebarOpen
-                    ? "translate-x-0"
-                    : "-translate-x-full lg:translate-x-0"}
-            `}>
+            <aside
+                className={`
+                    fixed lg:sticky top-0 left-0 z-50
+                    h-screen w-[255px] shrink-0
+                    bg-[#111113] text-white
+                    flex flex-col
+                    transition-transform duration-300
+                    ${sidebarOpen
+                        ? "translate-x-0"
+                        : "-translate-x-full lg:translate-x-0"}
+                `}
+            >
 
                 {/* LOGO */}
-                <div className="h-[90px] px-7 flex items-center justify-between border-b border-white/10">
+                <div className="h-[90px] px-6 flex items-center justify-between border-b border-white/[0.07]">
 
-                    <Link
-                        to="/admin"
-                        className="flex items-center gap-3"
-                    >
+                    <Link to="/admin" className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-[#F97316] flex items-center justify-center">
                             <ShoppingBag size={22} strokeWidth={2.5} />
                         </div>
@@ -163,103 +177,77 @@ const Admin = () => {
                     >
                         <X size={22} />
                     </button>
-
                 </div>
 
                 {/* NAVIGATION */}
                 <div className="flex-1 px-4 py-8 overflow-y-auto">
 
-                    <p className="text-[10px] uppercase tracking-[2px] text-gray-500 font-semibold px-3 mb-5">
-                        Main Menu
+                    <p className="text-[10px] uppercase tracking-[2px] text-gray-500 font-bold px-3 mb-5">
+                        General
                     </p>
 
                     <nav className="space-y-2">
 
-                        <Link
-                            to="/admin"
-                            onClick={() => setSidebarOpen(false)}
-                            className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-[#F97316] text-white text-sm font-semibold shadow-lg shadow-orange-950/20"
-                        >
-                            <LayoutDashboard size={19} />
+                        <NavLink to="/admin" icon={LayoutDashboard} active>
                             Dashboard
-                        </Link>
+                        </NavLink>
 
-                        <Link
-                            to="/admin/products"
-                            onClick={() => setSidebarOpen(false)}
-                            className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
-                        >
-                            <Package size={19} />
+                        <NavLink to="/admin/products" icon={Package}>
                             Products
-                            <ChevronRight size={16} className="ml-auto" />
-                        </Link>
+                        </NavLink>
 
-                        <Link
-                            to="/admin/orders"
-                            onClick={() => setSidebarOpen(false)}
-                            className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
-                        >
-                            <ShoppingBag size={19} />
+                        <NavLink to="/admin/orders" icon={ShoppingBag}>
                             Orders
-                        </Link>
+                        </NavLink>
 
-                        <Link
-                            to="/admin/users"
-                            onClick={() => setSidebarOpen(false)}
-                            className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
-                        >
-                            <Users size={19} />
+                        <NavLink to="/admin/users" icon={Users}>
                             Customers
-                        </Link>
+                        </NavLink>
 
                     </nav>
 
-                    <p className="text-[10px] uppercase tracking-[2px] text-gray-500 font-semibold px-3 mt-10 mb-5">
+                    <p className="text-[10px] uppercase tracking-[2px] text-gray-500 font-bold px-3 mt-10 mb-5">
                         Management
                     </p>
 
                     <nav className="space-y-2">
 
-                        <Link
-                            to="/admin/admins"
-                            onClick={() => setSidebarOpen(false)}
-                            className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
-                        >
-                            <ShieldCheck size={19} />
+                        <NavLink to="/admin/admins" icon={ShieldCheck}>
                             Admin Management
-                        </Link>
+                        </NavLink>
 
-                        <Link
-                            to="/admin/settings"
-                            onClick={() => setSidebarOpen(false)}
-                            className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition text-sm"
-                        >
-                            <Settings size={19} />
+                        <NavLink to="/admin/settings" icon={Settings}>
                             Settings
-                        </Link>
+                        </NavLink>
+
+                        <NavLink to="/admin/help" icon={CircleHelp}>
+                            Help & Support
+                        </NavLink>
 
                     </nav>
 
                 </div>
 
                 {/* SIDEBAR BOTTOM */}
-                <div className="p-5 border-t border-white/10">
+                <div className="p-5 border-t border-white/[0.07]">
 
                     <button
                         onClick={() => toast("Connect your logout function here")}
-                        className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition"
+                        className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition"
                     >
                         <LogOut size={19} />
                         Logout
                     </button>
 
-                    <div className="mt-5 px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.07]">
+                    <div className="mt-4 px-4 py-4 rounded-xl bg-white/[0.04] border border-white/[0.07]">
                         <p className="text-[11px] text-gray-500">
                             Store Dashboard
                         </p>
+
                         <p className="text-sm font-semibold mt-1">
                             Shopestoo Admin
                         </p>
+
                         <div className="flex items-center gap-2 mt-3">
                             <span className="w-2 h-2 rounded-full bg-green-500" />
                             <span className="text-[10px] text-gray-400">
@@ -267,16 +255,13 @@ const Admin = () => {
                             </span>
                         </div>
                     </div>
-
                 </div>
-
             </aside>
-
 
             {/* MAIN CONTENT */}
             <main className="flex-1 min-w-0">
 
-                {/* TOP HEADER */}
+                {/* HEADER */}
                 <header className="h-[82px] bg-white border-b border-gray-100 px-5 md:px-8 flex items-center justify-between sticky top-0 z-30">
 
                     <div className="flex items-center gap-4">
@@ -288,35 +273,30 @@ const Admin = () => {
                             <Menu size={22} />
                         </button>
 
-                        <div className="hidden sm:block">
-                            <p className="text-[10px] text-gray-400 uppercase tracking-[1.5px]">
+                        <div>
+                            <p className="hidden sm:block text-[10px] text-gray-400 uppercase tracking-[1.5px]">
                                 Shopestoo / Workspace
                             </p>
+
                             <h1 className="font-bold text-lg mt-1">
                                 Dashboard
                             </h1>
                         </div>
-
-                        <h1 className="sm:hidden font-bold text-lg">
-                            Dashboard
-                        </h1>
-
                     </div>
 
                     <div className="flex items-center gap-3 md:gap-5">
 
-                        {/* SEARCH */}
-                        <div className="hidden md:flex items-center gap-3 bg-[#F5F5F6] px-4 py-3 rounded-xl w-[280px] lg:w-[350px]">
-                            <Search size={18} className="text-gray-400 shrink-0" />
+                        <div className="hidden md:flex items-center gap-3 bg-[#F5F5F6] px-4 py-3 rounded-xl w-[230px]">
+                            <Search size={18} className="text-gray-400" />
+
                             <input
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Search products..."
-                                className="bg-transparent outline-none text-sm w-full placeholder:text-gray-400"
+                                className="bg-transparent outline-none text-sm w-full"
                             />
                         </div>
 
-                        {/* REFRESH */}
                         <button
                             onClick={fetchDashboard}
                             title="Refresh dashboard"
@@ -328,7 +308,6 @@ const Admin = () => {
                             />
                         </button>
 
-                        {/* NOTIFICATION */}
                         <button className="relative p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 transition">
                             <Bell size={20} />
                             <span className="absolute top-2 right-2 w-2 h-2 bg-[#F97316] rounded-full border-2 border-white" />
@@ -336,29 +315,23 @@ const Admin = () => {
 
                         <div className="h-8 w-px bg-gray-200 hidden sm:block" />
 
-                        {/* ADMIN PROFILE */}
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-orange-100 text-[#F97316] flex items-center justify-center font-bold">
+                            <div className="w-10 h-10 rounded-full bg-[#FFF0E5] text-[#F97316] flex items-center justify-center font-bold border border-orange-100">
                                 A
                             </div>
 
                             <div className="hidden sm:block">
-                                <p className="text-sm font-semibold">
-                                    Admin
-                                </p>
+                                <p className="text-sm font-semibold">Admin</p>
                                 <p className="text-[11px] text-gray-400">
                                     Administrator
                                 </p>
                             </div>
                         </div>
-
                     </div>
-
                 </header>
 
-
                 {/* DASHBOARD BODY */}
-                <div className="max-w-[1600px] mx-auto p-5 md:p-8 lg:p-9">
+                <div className="max-w-[1600px] mx-auto p-5 md:p-8">
 
                     {/* WELCOME */}
                     <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-8">
@@ -388,59 +361,53 @@ const Admin = () => {
 
                     </section>
 
-
-                    {/* STATS CARDS */}
+                    {/* STATS */}
                     <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
 
                         {stats.map((stat) => {
-
                             const Icon = stat.icon;
 
                             return (
                                 <div
                                     key={stat.title}
-                                    className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition duration-300"
+                                    className={`relative overflow-hidden bg-gradient-to-br ${stat.gradient} border border-gray-100 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition duration-300`}
                                 >
+                                    <div className="absolute -right-8 -bottom-12 w-36 h-36 rounded-full bg-white/50" />
 
-                                    <div className="flex items-center justify-between">
+                                    <div className="relative z-10">
 
-                                        <p className="text-sm text-gray-500 font-medium">
-                                            {stat.title}
-                                        </p>
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-sm text-gray-500 font-medium">
+                                                {stat.title}
+                                            </p>
 
-                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color}`}>
-                                            <Icon size={23} />
+                                            <div className={`w-11 h-11 rounded-xl ${stat.bg} ${stat.color} flex items-center justify-center`}>
+                                                <Icon size={22} />
+                                            </div>
                                         </div>
 
+                                        <h3 className="text-[30px] font-bold tracking-tight mt-5">
+                                            {loading ? "..." : stat.value}
+                                        </h3>
+
+                                        <p className="text-xs text-gray-500 mt-3">
+                                            {stat.description}
+                                        </p>
                                     </div>
-
-                                    <h3 className="text-[30px] font-bold tracking-tight mt-5">
-                                        {loading ? "..." : stat.value}
-                                    </h3>
-
-                                    <p className="text-xs text-gray-400 mt-3">
-                                        {stat.description}
-                                    </p>
-
-                                    <div className="mt-5 h-1 w-full rounded-full bg-gray-100 overflow-hidden">
-                                        <div className={`h-full w-1/3 rounded-full ${stat.accent}`} />
-                                    </div>
-
                                 </div>
                             );
-
                         })}
 
                     </section>
 
-
-                    {/* INVENTORY SECTION */}
+                    {/* INVENTORY OVERVIEW */}
                     <section className="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-7">
 
-                        {/* INVENTORY MAIN CARD */}
                         <div className="lg:col-span-2 bg-[#151515] rounded-2xl p-7 md:p-8 text-white relative overflow-hidden">
 
                             <div className="absolute -right-20 -top-24 w-72 h-72 rounded-full bg-[#F97316]/10 blur-3xl" />
+
+                            <div className="absolute -right-10 -bottom-32 w-64 h-64 rounded-full bg-orange-500/10 blur-3xl" />
 
                             <div className="relative z-10">
 
@@ -464,7 +431,6 @@ const Admin = () => {
                                     <div className="w-14 h-14 rounded-2xl bg-[#F97316]/15 text-[#F97316] flex items-center justify-center">
                                         <Package size={27} />
                                     </div>
-
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-5 mt-9 pt-6 border-t border-white/10">
@@ -490,14 +456,11 @@ const Admin = () => {
                                     </div>
 
                                 </div>
-
                             </div>
-
                         </div>
 
-
                         {/* ALERT CARD */}
-                        <div className="bg-white border border-gray-100 rounded-2xl p-7 flex flex-col">
+                        <div className="bg-white border border-gray-100 rounded-2xl p-7 flex flex-col shadow-sm">
 
                             <div className="flex items-center justify-between">
 
@@ -508,7 +471,6 @@ const Admin = () => {
                                 <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-3 py-1.5 rounded-full">
                                     Attention
                                 </span>
-
                             </div>
 
                             <p className="text-sm text-gray-500 mt-6">
@@ -530,20 +492,19 @@ const Admin = () => {
                                 Manage Inventory
                                 <ArrowUpRight size={17} />
                             </Link>
-
                         </div>
 
                     </section>
 
-
                     {/* RECENT PRODUCTS */}
-                    <section className="bg-white border border-gray-100 rounded-2xl mt-8 overflow-hidden">
+                    <section className="bg-white border border-gray-100 rounded-2xl mt-8 overflow-hidden shadow-sm">
 
                         <div className="p-6 md:p-7 flex flex-col md:flex-row md:items-center justify-between gap-5">
 
                             <div>
                                 <div className="flex items-center gap-2">
                                     <Package size={19} className="text-[#F97316]" />
+
                                     <h3 className="text-lg font-bold">
                                         Recently Added Products
                                     </h3>
@@ -556,7 +517,7 @@ const Admin = () => {
 
                             <div className="flex items-center gap-3">
 
-                                <div className="relative flex-1 md:flex-none">
+                                <div className="relative flex-1 md:hidden">
                                     <Search
                                         size={16}
                                         className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
@@ -566,7 +527,7 @@ const Admin = () => {
                                         value={search}
                                         onChange={(e) => setSearch(e.target.value)}
                                         placeholder="Search products..."
-                                        className="w-full md:w-[220px] pl-9 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition"
+                                        className="w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm outline-none focus:border-orange-300"
                                     />
                                 </div>
 
@@ -577,17 +538,14 @@ const Admin = () => {
                                     View All
                                     <ArrowUpRight size={15} className="inline ml-1" />
                                 </Link>
-
                             </div>
-
                         </div>
-
 
                         <div className="overflow-x-auto">
 
                             <table className="w-full text-left">
 
-                                <thead className="bg-[#F9FAFB] text-[10px] uppercase tracking-wider text-gray-400">
+                                <thead className="bg-[#FAFAFA] text-[10px] uppercase tracking-wider text-gray-400">
                                     <tr>
                                         <th className="px-6 py-4 font-semibold">Product</th>
                                         <th className="px-6 py-4 font-semibold">Category</th>
@@ -600,33 +558,25 @@ const Admin = () => {
                                 <tbody className="divide-y divide-gray-100">
 
                                     {loading ? (
-
                                         <tr>
                                             <td colSpan="5" className="text-center py-14 text-gray-400 text-sm">
                                                 Loading products...
                                             </td>
                                         </tr>
-
                                     ) : filteredProducts.length === 0 ? (
-
                                         <tr>
                                             <td colSpan="5" className="text-center py-14 text-gray-400 text-sm">
                                                 No products found.
                                             </td>
                                         </tr>
-
                                     ) : (
-
                                         filteredProducts.map((product) => (
-
                                             <tr
                                                 key={product._id}
                                                 className="hover:bg-orange-50/30 transition"
                                             >
-
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3 min-w-[200px]">
-
                                                         <img
                                                             src={product.images?.[0] || "https://placehold.co/60"}
                                                             alt={product.productName}
@@ -636,7 +586,6 @@ const Admin = () => {
                                                         <span className="font-semibold text-sm text-gray-800">
                                                             {product.productName}
                                                         </span>
-
                                                     </div>
                                                 </td>
 
@@ -667,33 +616,27 @@ const Admin = () => {
                                                         {product.ratings || 0}
                                                     </span>
                                                 </td>
-
                                             </tr>
-
                                         ))
-
                                     )}
 
                                 </tbody>
-
                             </table>
-
                         </div>
-
                     </section>
 
-
-                    {/* LOWER DASHBOARD GRID */}
+                    {/* BOTTOM GRID */}
                     <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
 
                         {/* TOP RATED PRODUCTS */}
-                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
+                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
 
                             <div className="p-6 border-b border-gray-100 flex items-center justify-between">
 
                                 <div>
                                     <div className="flex items-center gap-2">
                                         <Crown size={19} className="text-[#F97316]" />
+
                                         <h3 className="font-bold text-lg">
                                             Top Rated Products
                                         </h3>
@@ -705,32 +648,24 @@ const Admin = () => {
                                 </div>
 
                                 <Star size={20} className="text-orange-400" />
-
                             </div>
 
                             <div className="p-5 space-y-4">
 
                                 {loading ? (
-
                                     <p className="text-center py-10 text-sm text-gray-400">
                                         Loading products...
                                     </p>
-
                                 ) : topRatedProducts.length === 0 ? (
-
                                     <p className="text-center py-10 text-sm text-gray-400">
                                         No rated products yet.
                                     </p>
-
                                 ) : (
-
                                     topRatedProducts.slice(0, 5).map((product, index) => (
-
                                         <div
                                             key={product._id}
                                             className="flex items-center gap-3"
                                         >
-
                                             <span className="w-6 text-xs font-bold text-gray-400">
                                                 {String(index + 1).padStart(2, "0")}
                                             </span>
@@ -755,25 +690,20 @@ const Admin = () => {
                                                 <Star size={13} fill="currentColor" />
                                                 {product.ratings || 0}
                                             </div>
-
                                         </div>
-
                                     ))
-
                                 )}
-
                             </div>
-
                         </div>
 
-
                         {/* QUICK ACTIONS */}
-                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
+                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
 
                             <div className="p-6 border-b border-gray-100">
 
                                 <div className="flex items-center gap-2">
                                     <TrendingUp size={19} className="text-[#F97316]" />
+
                                     <h3 className="font-bold text-lg">
                                         Quick Actions
                                     </h3>
@@ -782,7 +712,6 @@ const Admin = () => {
                                 <p className="text-xs text-gray-400 mt-1">
                                     Manage your store with quick access.
                                 </p>
-
                             </div>
 
                             <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -864,32 +793,29 @@ const Admin = () => {
                                 </Link>
 
                             </div>
-
                         </div>
-
                     </section>
 
-
-                    {/* RECENT ORDERS PLACEHOLDER */}
-                    <section className="bg-white border border-gray-100 rounded-2xl mt-8 overflow-hidden">
+                    {/* ORDERS */}
+                    <section className="bg-white border border-gray-100 rounded-2xl mt-8 overflow-hidden shadow-sm">
 
                         <div className="p-6 md:p-7 flex items-center justify-between">
 
                             <div>
                                 <div className="flex items-center gap-2">
                                     <ShoppingBag size={19} className="text-[#F97316]" />
+
                                     <h3 className="font-bold text-lg">
                                         Recent Orders
                                     </h3>
                                 </div>
 
                                 <p className="text-sm text-gray-400 mt-1">
-                                    Your customer purchases will appear here.
+                                    Customer purchases and order activity.
                                 </p>
                             </div>
 
                             <ShoppingBag size={25} className="text-orange-200" />
-
                         </div>
 
                         <div className="mx-6 mb-6 bg-gray-50 rounded-xl py-10 text-center">
@@ -899,17 +825,22 @@ const Admin = () => {
                             </div>
 
                             <p className="font-semibold text-sm mt-4">
-                                Order management coming soon
+                                Order analytics not connected yet
                             </p>
 
                             <p className="text-xs text-gray-400 mt-2">
-                                Connect your checkout and order APIs to display purchases here.
+                                Connect your order API to display recent purchases here.
                             </p>
 
+                            <Link
+                                to="/admin/orders"
+                                className="inline-flex items-center gap-2 text-[#F97316] text-sm font-semibold mt-5 hover:gap-3 transition-all"
+                            >
+                                Manage Orders
+                                <ChevronRight size={16} />
+                            </Link>
                         </div>
-
                     </section>
-
 
                     {/* FOOTER */}
                     <footer className="py-7 mt-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
@@ -923,13 +854,10 @@ const Admin = () => {
                             <span className="text-[#F97316] mx-2">●</span>
                             Store Management
                         </p>
-
                     </footer>
 
                 </div>
-
             </main>
-
         </div>
     );
 };
