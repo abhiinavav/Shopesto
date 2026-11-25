@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -132,13 +131,13 @@ const Home = () => {
     };
 
     return (
-        <main className="min-h-screen overflow-hidden bg-[#f8f7f3] text-[#25241f]">
+        <main className="min-h-screen overflow-hidden bg-[#ffffff] text-[#030712]">
 
             {/* ANNOUNCEMENT BAR */}
 
-            <div className="bg-[#292820] px-4 py-3 text-center text-[10px] font-medium tracking-[0.2em] text-[#f5f1e8] sm:text-xs">
+            <div className="bg-[#030712] px-4 py-3 text-center text-[10px] font-medium tracking-[0.2em] text-white sm:text-xs">
                 A MORE THOUGHTFUL WAY TO SHOP
-                <span className="mx-3 text-[#b9a27b]">✦</span>
+                <span className="mx-3 text-[#f97316]">✦</span>
                 DISCOVER THE COLLECTION
             </div>
 
@@ -152,18 +151,18 @@ const Home = () => {
 
                     <div className="order-2 py-5 lg:order-1 lg:py-12">
 
-                        <p className="mb-6 text-[10px] font-semibold uppercase tracking-[0.3em] text-[#a18a65] sm:text-xs">
+                        <p className="mb-6 text-[10px] font-semibold uppercase tracking-[0.3em] text-[#f97316] sm:text-xs">
                             THE ART OF EVERYDAY LIVING
                         </p>
 
-                        <h1 className="max-w-2xl font-serif text-5xl leading-[1.12] tracking-tight text-[#25241f] sm:text-6xl lg:text-7xl xl:text-[88px]">
+                        <h1 className="max-w-2xl font-serif text-5xl leading-[1.12] tracking-tight text-[#030712] sm:text-6xl lg:text-7xl xl:text-[88px]">
                             Find beauty in
-                            <span className="block italic text-[#a18a65]">
+                            <span className="block italic text-[#fb923c]">
                                 every detail.
                             </span>
                         </h1>
 
-                        <p className="mt-7 max-w-md text-sm leading-8 text-[#77746b] sm:text-base">
+                        <p className="mt-7 max-w-md text-sm leading-8 text-[#6b7280] sm:text-base">
                             Thoughtfully selected essentials for the way you
                             live, work and express yourself. Discover pieces
                             that make everyday moments feel special.
@@ -173,7 +172,7 @@ const Home = () => {
 
                             <Link
                                 to="/product"
-                                className="group flex items-center gap-5 bg-[#292820] px-7 py-4 text-xs font-medium uppercase tracking-[0.15em] text-white transition hover:bg-[#a18a65]"
+                                className="group flex items-center gap-5 bg-[#030712] px-7 py-4 text-xs font-medium uppercase tracking-[0.15em] text-white transition hover:bg-[#f97316]"
                             >
                                 Explore Collection
                                 <ArrowUpRight
@@ -184,7 +183,7 @@ const Home = () => {
 
                             <Link
                                 to="/about"
-                                className="border-b border-[#b9a27b] pb-2 text-xs font-medium uppercase tracking-[0.15em] text-[#555248] transition hover:text-[#a18a65]"
+                                className="border-b border-[#fb923c] pb-2 text-xs font-medium uppercase tracking-[0.15em] text-[#374151] transition hover:text-[#f97316]"
                             >
                                 Our Story
                             </Link>
@@ -195,21 +194,21 @@ const Home = () => {
 
                         <form
                             onSubmit={handleSearch}
-                            className="mt-12 flex max-w-md items-center border-b border-[#d9d5ca] pb-3"
+                            className="mt-12 flex max-w-md items-center border-b border-[#d1d5db] pb-3"
                         >
-                            <Search size={18} className="text-[#a18a65]" />
+                            <Search size={18} className="text-[#f97316]" />
 
                             <input
                                 type="text"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Search for something special..."
-                                className="ml-3 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-[#aaa69c]"
+                                className="ml-3 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-[#9ca3af]"
                             />
 
                             <button
                                 type="submit"
-                                className="text-xs font-semibold uppercase tracking-wider text-[#a18a65] hover:text-[#292820]"
+                                className="text-xs font-semibold uppercase tracking-wider text-[#f97316] hover:text-[#030712]"
                             >
                                 Search
                             </button>
@@ -218,8 +217,8 @@ const Home = () => {
                         {/* Small detail */}
 
                         <div className="mt-12 flex items-center gap-4">
-                            <div className="h-px w-12 bg-[#b9a27b]" />
-                            <p className="text-[10px] uppercase tracking-[0.2em] text-[#8d897e]">
+                            <div className="h-px w-12 bg-[#fb923c]" />
+                            <p className="text-[10px] uppercase tracking-[0.2em] text-[#6b7280]">
                                 Curated for everyday elegance
                             </p>
                         </div>
@@ -230,7 +229,7 @@ const Home = () => {
 
                     <div className="relative order-1 lg:order-2">
 
-                        <div className="absolute -right-3 -top-3 h-full w-full border border-[#d8d0c0] sm:-right-5 sm:-top-5" />
+                        <div className="absolute -right-3 -top-3 h-full w-full border border-[#d1d5db] sm:-right-5 sm:-top-5" />
 
                         <div className="relative h-[420px] overflow-hidden sm:h-[560px] lg:h-[680px]">
 
@@ -242,18 +241,18 @@ const Home = () => {
 
                             <div className="absolute inset-0 bg-black/5" />
 
-                            <div className="absolute bottom-6 left-6 bg-[#f8f7f3] px-5 py-4 sm:bottom-10 sm:left-10 sm:px-7 sm:py-6">
-                                <p className="text-[9px] uppercase tracking-[0.25em] text-[#a18a65]">
+                            <div className="absolute bottom-6 left-6 bg-white px-5 py-4 sm:bottom-10 sm:left-10 sm:px-7 sm:py-6">
+                                <p className="text-[9px] uppercase tracking-[0.25em] text-[#f97316]">
                                     THE NEW EDIT
                                 </p>
-                                <p className="mt-2 font-serif text-2xl italic text-[#292820] sm:text-3xl">
+                                <p className="mt-2 font-serif text-2xl italic text-[#030712] sm:text-3xl">
                                     Less, but better.
                                 </p>
                             </div>
 
                         </div>
 
-                        <p className="mt-4 text-right text-[9px] uppercase tracking-[0.2em] text-[#969186]">
+                        <p className="mt-4 text-right text-[9px] uppercase tracking-[0.2em] text-[#9ca3af]">
                             SHOPESTOO — EST. 2026
                         </p>
 
@@ -265,14 +264,14 @@ const Home = () => {
 
             {/* BRAND STRIP */}
 
-            <section className="border-y border-[#e5e1d8] bg-[#f1efe9] py-7">
-                <div className="mx-auto flex max-w-[1300px] flex-wrap items-center justify-center gap-x-12 gap-y-5 px-5 text-center text-[10px] uppercase tracking-[0.2em] text-[#77746b] sm:justify-between sm:px-8">
+            <section className="border-y border-[#e5e7eb] bg-[#f3f4f6] py-7">
+                <div className="mx-auto flex max-w-[1300px] flex-wrap items-center justify-center gap-x-12 gap-y-5 px-5 text-center text-[10px] uppercase tracking-[0.2em] text-[#6b7280] sm:justify-between sm:px-8">
                     <span>Thoughtfully Curated</span>
-                    <span className="hidden text-[#b9a27b] sm:block">✦</span>
+                    <span className="hidden text-[#f97316] sm:block">✦</span>
                     <span>Quality First</span>
-                    <span className="hidden text-[#b9a27b] sm:block">✦</span>
+                    <span className="hidden text-[#f97316] sm:block">✦</span>
                     <span>Everyday Essentials</span>
-                    <span className="hidden text-[#b9a27b] sm:block">✦</span>
+                    <span className="hidden text-[#f97316] sm:block">✦</span>
                     <span>Made for You</span>
                 </div>
             </section>
@@ -284,7 +283,7 @@ const Home = () => {
                 <div className="mb-10 flex flex-wrap items-end justify-between gap-5">
 
                     <div>
-                        <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#a18a65]">
+                        <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#f97316]">
                             EXPLORE OUR WORLD
                         </p>
 
@@ -295,7 +294,7 @@ const Home = () => {
 
                     <Link
                         to="/product"
-                        className="group flex items-center gap-2 border-b border-[#b9a27b] pb-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#555248]"
+                        className="group flex items-center gap-2 border-b border-[#fb923c] pb-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#374151]"
                     >
                         All Categories
                         <ArrowRight size={15} className="transition group-hover:translate-x-1" />
@@ -305,7 +304,7 @@ const Home = () => {
 
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
 
-                    {categories.map((category, index) => (
+                    {categories.map((category) => (
 
                         <Link
                             key={category.name}
@@ -313,7 +312,7 @@ const Home = () => {
                             className="group"
                         >
 
-                            <div className="aspect-[4/5] overflow-hidden bg-[#eeece5]">
+                            <div className="aspect-[4/5] overflow-hidden bg-[#f3f4f6]">
                                 <img
                                     src={category.image}
                                     alt={category.name}
@@ -321,14 +320,14 @@ const Home = () => {
                                 />
                             </div>
 
-                            <div className="flex items-center justify-between border-b border-[#e2ded5] py-4">
-                                <h3 className="text-xs font-medium tracking-wide text-[#39372f]">
+                            <div className="flex items-center justify-between border-b border-[#e5e7eb] py-4">
+                                <h3 className="text-xs font-medium tracking-wide text-[#111827]">
                                     {category.name}
                                 </h3>
 
                                 <ArrowUpRight
                                     size={15}
-                                    className="text-[#a18a65] transition group-hover:-translate-y-1 group-hover:translate-x-1"
+                                    className="text-[#f97316] transition group-hover:-translate-y-1 group-hover:translate-x-1"
                                 />
                             </div>
 
@@ -342,14 +341,14 @@ const Home = () => {
 
             {/* FEATURED PRODUCTS */}
 
-            <section className="bg-[#f0eee8] py-20 lg:py-28">
+            <section className="bg-[#f3f4f6] py-20 lg:py-28">
 
                 <div className="mx-auto max-w-[1500px] px-5 sm:px-8 lg:px-14">
 
                     <div className="mb-12 flex flex-wrap items-end justify-between gap-5">
 
                         <div>
-                            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#a18a65]">
+                            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#f97316]">
                                 THE SELECTION
                             </p>
 
@@ -357,7 +356,7 @@ const Home = () => {
                                 Pieces worth discovering.
                             </h2>
 
-                            <p className="mt-4 max-w-md text-sm leading-7 text-[#77746b]">
+                            <p className="mt-4 max-w-md text-sm leading-7 text-[#6b7280]">
                                 A considered collection of favourites, chosen
                                 to bring a little more meaning to everyday life.
                             </p>
@@ -365,7 +364,7 @@ const Home = () => {
 
                         <Link
                             to="/product"
-                            className="group flex items-center gap-2 border-b border-[#b9a27b] pb-2 text-[10px] font-semibold uppercase tracking-[0.15em]"
+                            className="group flex items-center gap-2 border-b border-[#fb923c] pb-2 text-[10px] font-semibold uppercase tracking-[0.15em]"
                         >
                             View All Products
                             <ArrowRight size={15} className="transition group-hover:translate-x-1" />
@@ -381,7 +380,7 @@ const Home = () => {
 
                                 {/* Product image */}
 
-                                <div className="relative aspect-[4/5] overflow-hidden bg-[#e7e4dc]">
+                                <div className="relative aspect-[4/5] overflow-hidden bg-[#e5e7eb]">
 
                                     <img
                                         src={product.image}
@@ -389,7 +388,7 @@ const Home = () => {
                                         className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                                     />
 
-                                    <span className="absolute left-4 top-4 bg-[#f8f7f3] px-3 py-2 text-[9px] font-medium tracking-[0.15em] text-[#77705f]">
+                                    <span className="absolute left-4 top-4 bg-white px-3 py-2 text-[9px] font-medium tracking-[0.15em] text-[#4b5563]">
                                         {product.tag}
                                     </span>
 
@@ -397,7 +396,7 @@ const Home = () => {
                                         type="button"
                                         onClick={() => toggleWishlist(product.id)}
                                         aria-label="Toggle wishlist"
-                                        className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#f8f7f3]/90 text-[#292820] transition hover:bg-[#292820] hover:text-white"
+                                        className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#030712] transition hover:bg-[#030712] hover:text-white"
                                     >
                                         <Heart
                                             size={17}
@@ -407,7 +406,7 @@ const Home = () => {
 
                                     <Link
                                         to="/product"
-                                        className="absolute bottom-4 left-4 right-4 flex items-center justify-center gap-2 bg-[#f8f7f3] py-4 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#292820] opacity-0 transition duration-300 hover:bg-[#292820] hover:text-white group-hover:opacity-100"
+                                        className="absolute bottom-4 left-4 right-4 flex items-center justify-center gap-2 bg-white py-4 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#030712] opacity-0 transition duration-300 hover:bg-[#030712] hover:text-white group-hover:opacity-100"
                                     >
                                         Explore Product
                                         <ArrowUpRight size={15} />
@@ -419,11 +418,11 @@ const Home = () => {
 
                                 <div className="pt-5">
 
-                                    <p className="text-[9px] uppercase tracking-[0.2em] text-[#a18a65]">
+                                    <p className="text-[9px] uppercase tracking-[0.2em] text-[#f97316]">
                                         {product.category}
                                     </p>
 
-                                    <h3 className="mt-2 font-serif text-lg text-[#292820]">
+                                    <h3 className="mt-2 font-serif text-lg text-[#030712]">
                                         {product.name}
                                     </h3>
 
@@ -434,14 +433,14 @@ const Home = () => {
                                                 ₹{product.price.toLocaleString("en-IN")}
                                             </span>
 
-                                            <span className="text-xs text-[#a5a196] line-through">
+                                            <span className="text-xs text-[#9ca3af] line-through">
                                                 ₹{product.oldPrice.toLocaleString("en-IN")}
                                             </span>
                                         </div>
 
-                                        <div className="flex items-center gap-1 text-[#a18a65]">
+                                        <div className="flex items-center gap-1 text-[#f97316]">
                                             <Star size={12} fill="currentColor" />
-                                            <span className="text-[10px] text-[#77746b]">
+                                            <span className="text-[10px] text-[#6b7280]">
                                                 {product.rating}
                                             </span>
                                         </div>
@@ -464,7 +463,7 @@ const Home = () => {
 
             <section className="mx-auto max-w-[1500px] px-5 py-20 sm:px-8 lg:px-14 lg:py-28">
 
-                <div className="grid overflow-hidden bg-[#e7e2d7] lg:grid-cols-2">
+                <div className="grid overflow-hidden bg-[#111827] lg:grid-cols-2">
 
                     <div className="relative min-h-[380px] lg:min-h-[570px]">
 
@@ -476,20 +475,20 @@ const Home = () => {
 
                     </div>
 
-                    <div className="flex flex-col justify-center px-8 py-14 sm:px-14 lg:px-16 lg:py-20">
+                    <div className="flex flex-col justify-center bg-[#111827] px-8 py-14 text-white sm:px-14 lg:px-16 lg:py-20">
 
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#a18a65]">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#fb923c]">
                             A NOTE ON STYLE
                         </p>
 
-                        <h2 className="mt-6 font-serif text-4xl leading-tight sm:text-5xl lg:text-6xl">
+                        <h2 className="mt-6 font-serif text-4xl leading-tight text-white sm:text-5xl lg:text-6xl">
                             Make room for
-                            <span className="block italic text-[#a18a65]">
+                            <span className="block italic text-[#fb923c]">
                                 what matters.
                             </span>
                         </h2>
 
-                        <p className="mt-6 max-w-md text-sm leading-8 text-[#77746b]">
+                        <p className="mt-6 max-w-md text-sm leading-8 text-gray-300">
                             We believe the best things are not always the
                             loudest. Discover thoughtfully selected pieces
                             that bring simplicity, character and quality
@@ -498,7 +497,7 @@ const Home = () => {
 
                         <Link
                             to="/product"
-                            className="group mt-9 flex w-fit items-center gap-4 border-b border-[#a18a65] pb-3 text-[10px] font-semibold uppercase tracking-[0.15em]"
+                            className="group mt-9 flex w-fit items-center gap-4 border-b border-[#f97316] pb-3 text-[10px] font-semibold uppercase tracking-[0.15em] text-white"
                         >
                             Discover More
                             <ArrowRight size={16} className="transition group-hover:translate-x-2" />
@@ -512,13 +511,13 @@ const Home = () => {
 
             {/* WHY SHOPESTOO */}
 
-            <section className="border-y border-[#e5e1d8] bg-[#f1efe9] py-20 lg:py-24">
+            <section className="border-y border-[#e5e7eb] bg-[#f3f4f6] py-20 lg:py-24">
 
                 <div className="mx-auto max-w-[1300px] px-5 sm:px-8 lg:px-14">
 
                     <div className="mb-14 text-center">
 
-                        <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#a18a65]">
+                        <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#f97316]">
                             THE SHOPESTOO PROMISE
                         </p>
 
@@ -555,7 +554,7 @@ const Home = () => {
 
                             <div key={index} className="text-center">
 
-                                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-[#d6cbb7] text-[#a18a65]">
+                                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-[#fed7aa] text-[#f97316]">
                                     <item.icon size={23} strokeWidth={1.4} />
                                 </div>
 
@@ -563,7 +562,7 @@ const Home = () => {
                                     {item.title}
                                 </h3>
 
-                                <p className="mx-auto mt-3 max-w-[230px] text-xs leading-7 text-[#858176]">
+                                <p className="mx-auto mt-3 max-w-[230px] text-xs leading-7 text-[#6b7280]">
                                     {item.desc}
                                 </p>
 
@@ -583,7 +582,7 @@ const Home = () => {
 
                 <div className="mb-12 text-center">
 
-                    <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#a18a65]">
+                    <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#f97316]">
                         KIND WORDS
                     </p>
 
@@ -599,10 +598,10 @@ const Home = () => {
 
                         <div
                             key={index}
-                            className="border border-[#e5e1d8] bg-[#fbfaf7] p-8 transition duration-300 hover:border-[#b9a27b]"
+                            className="border border-[#e5e7eb] bg-white p-8 transition duration-300 hover:border-[#fb923c]"
                         >
 
-                            <div className="flex gap-1 text-[#b9a27b]">
+                            <div className="flex gap-1 text-[#f97316]">
                                 {[1, 2, 3, 4, 5].map((star) => (
                                     <Star
                                         key={star}
@@ -612,11 +611,11 @@ const Home = () => {
                                 ))}
                             </div>
 
-                            <p className="mt-7 min-h-[90px] font-serif text-lg leading-8 text-[#454238]">
+                            <p className="mt-7 min-h-[90px] font-serif text-lg leading-8 text-[#374151]">
                                 "{review.review}"
                             </p>
 
-                            <div className="mt-7 flex items-center gap-3 border-t border-[#e5e1d8] pt-5">
+                            <div className="mt-7 flex items-center gap-3 border-t border-[#e5e7eb] pt-5">
 
                                 <img
                                     src={review.image}
@@ -629,7 +628,7 @@ const Home = () => {
                                         {review.name}
                                     </h3>
 
-                                    <p className="mt-1 text-[9px] uppercase tracking-[0.15em] text-[#a18a65]">
+                                    <p className="mt-1 text-[9px] uppercase tracking-[0.15em] text-[#f97316]">
                                         Verified Customer
                                     </p>
                                 </div>
@@ -648,9 +647,9 @@ const Home = () => {
 
             <section className="px-5 pb-20 sm:px-8 lg:px-14 lg:pb-28">
 
-                <div className="mx-auto max-w-[1500px] bg-[#292820] px-7 py-16 text-center text-[#f8f7f3] sm:px-14 sm:py-20">
+                <div className="mx-auto max-w-[1500px] bg-[#030712] px-7 py-16 text-center text-white sm:px-14 sm:py-20">
 
-                    <p className="text-[10px] uppercase tracking-[0.3em] text-[#c5ae85]">
+                    <p className="text-[10px] uppercase tracking-[0.3em] text-[#f97316]">
                         YOUR NEXT FAVOURITE AWAITS
                     </p>
 
@@ -658,14 +657,14 @@ const Home = () => {
                         Discover a more considered way to shop.
                     </h2>
 
-                    <p className="mx-auto mt-5 max-w-lg text-sm leading-7 text-[#c3c0b5]">
+                    <p className="mx-auto mt-5 max-w-lg text-sm leading-7 text-[#d1d5db]">
                         Explore the collection and find something that feels
                         just right.
                     </p>
 
                     <Link
                         to="/product"
-                        className="group mx-auto mt-9 flex w-fit items-center gap-4 bg-[#f8f7f3] px-8 py-4 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#292820] transition hover:bg-[#c5ae85]"
+                        className="group mx-auto mt-9 flex w-fit items-center gap-4 bg-[#f97316] px-8 py-4 text-[10px] font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-[#ea580c]"
                     >
                         Explore Shopestoo
                         <ArrowRight size={16} className="transition group-hover:translate-x-1" />
@@ -677,7 +676,7 @@ const Home = () => {
 
             {/* FOOTER */}
 
-            <footer className="border-t border-[#e5e1d8] bg-[#f1efe9]">
+            <footer className="border-t border-[#e5e7eb] bg-[#f3f4f6]">
 
                 <div className="mx-auto grid max-w-[1500px] gap-12 px-5 py-16 sm:px-8 md:grid-cols-2 lg:grid-cols-4 lg:px-14">
 
@@ -686,10 +685,10 @@ const Home = () => {
                     <div>
 
                         <Link to="/" className="font-serif text-3xl tracking-tight">
-                            Shopes<span className="italic text-[#a18a65]">too.</span>
+                            Shopes<span className="italic text-[#f97316]">too.</span>
                         </Link>
 
-                        <p className="mt-5 max-w-xs text-xs leading-7 text-[#858176]">
+                        <p className="mt-5 max-w-xs text-xs leading-7 text-[#6b7280]">
                             A thoughtful destination for everyday essentials.
                             Discover products that bring quality and simplicity
                             into your life.
@@ -704,11 +703,11 @@ const Home = () => {
                             Explore
                         </h3>
 
-                        <div className="flex flex-col gap-4 text-xs text-[#77746b]">
-                            <Link to="/" className="transition hover:text-[#a18a65]">Home</Link>
-                            <Link to="/product" className="transition hover:text-[#a18a65]">All Products</Link>
-                            <Link to="/about" className="transition hover:text-[#a18a65]">Our Story</Link>
-                            <Link to="/contact" className="transition hover:text-[#a18a65]">Contact</Link>
+                        <div className="flex flex-col gap-4 text-xs text-[#6b7280]">
+                            <Link to="/" className="transition hover:text-[#f97316]">Home</Link>
+                            <Link to="/product" className="transition hover:text-[#f97316]">All Products</Link>
+                            <Link to="/about" className="transition hover:text-[#f97316]">Our Story</Link>
+                            <Link to="/contact" className="transition hover:text-[#f97316]">Contact</Link>
                         </div>
                     </div>
 
@@ -719,11 +718,11 @@ const Home = () => {
                             Customer Care
                         </h3>
 
-                        <div className="flex flex-col gap-4 text-xs text-[#77746b]">
-                            <Link to="/contact" className="transition hover:text-[#a18a65]">Help Center</Link>
-                            <Link to="/contact" className="transition hover:text-[#a18a65]">Returns & Refunds</Link>
-                            <Link to="/contact" className="transition hover:text-[#a18a65]">Shipping Information</Link>
-                            <Link to="/contact" className="transition hover:text-[#a18a65]">Track Order</Link>
+                        <div className="flex flex-col gap-4 text-xs text-[#6b7280]">
+                            <Link to="/contact" className="transition hover:text-[#f97316]">Help Center</Link>
+                            <Link to="/contact" className="transition hover:text-[#f97316]">Returns & Refunds</Link>
+                            <Link to="/contact" className="transition hover:text-[#f97316]">Shipping Information</Link>
+                            <Link to="/contact" className="transition hover:text-[#f97316]">Track Order</Link>
                         </div>
                     </div>
 
@@ -734,7 +733,7 @@ const Home = () => {
                             Get in Touch
                         </h3>
 
-                        <div className="flex flex-col gap-4 text-xs text-[#77746b]">
+                        <div className="flex flex-col gap-4 text-xs text-[#6b7280]">
                             <p>support@shopestoo.com</p>
                             <p>Customer Support</p>
                             <p>Shopestoo Online Store</p>
@@ -745,17 +744,17 @@ const Home = () => {
 
                 {/* Copyright */}
 
-                <div className="border-t border-[#dedacf]">
+                <div className="border-t border-[#e5e7eb]">
 
-                    <div className="mx-auto flex max-w-[1500px] flex-col justify-between gap-4 px-5 py-6 text-[10px] text-[#858176] sm:px-8 md:flex-row lg:px-14">
+                    <div className="mx-auto flex max-w-[1500px] flex-col justify-between gap-4 px-5 py-6 text-[10px] text-[#6b7280] sm:px-8 md:flex-row lg:px-14">
 
                         <p>
                             © 2026 Shopestoo. All rights reserved.
                         </p>
 
                         <div className="flex gap-6">
-                            <Link to="/about" className="hover:text-[#a18a65]">Privacy Policy</Link>
-                            <Link to="/about" className="hover:text-[#a18a65]">Terms & Conditions</Link>
+                            <Link to="/about" className="hover:text-[#f97316]">Privacy Policy</Link>
+                            <Link to="/about" className="hover:text-[#f97316]">Terms & Conditions</Link>
                         </div>
 
                     </div>
