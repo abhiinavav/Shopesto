@@ -23,7 +23,7 @@ const Header = () => {
     const handleLogout = async () => {
         await logout();
         setMobileMenu(false);
-        navigate("/login");
+        navigate("/");
     };
 
     const closeMenu = () => setMobileMenu(false);
@@ -200,7 +200,7 @@ const Header = () => {
                                 <hr className="my-3 border-gray-100" />
 
                                 <Link
-                                    to="/profile"
+                                    to="/user"
                                     onClick={closeMenu}
                                     className="flex items-center gap-3 rounded-xl bg-gray-50 p-3"
                                 >
