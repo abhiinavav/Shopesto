@@ -144,7 +144,7 @@ const AdminProduct = () => {
                         <EyeOff className="text-red-500" size={25} />
                     </div>
                     <h2 className="text-3xl font-bold mt-3">
-                        {products.filter(p => p.stock === 0).length}
+                        {products.filter(p => p.stock < 30).length}
                     </h2>
                 </div>
 
