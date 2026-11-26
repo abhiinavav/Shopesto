@@ -21,6 +21,9 @@ const middleware = async(req,res,next)=>{
         // const user = await User.findById(decode.id)
 
         // req.user = user;
+
+        // console.log("Decoded JWT:", decode);
+        // console.log("Account Type:", decode.accountType);
                 
         let account;
 
@@ -40,7 +43,7 @@ const middleware = async(req,res,next)=>{
 
 
         req.user = account;
-        req.accountType = decode.accountType;
+        req.accountType = decode.accountType || decode.role;
 
         next();
 

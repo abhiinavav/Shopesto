@@ -84,7 +84,13 @@ export const login = async (req,res) =>{
             return res.status(404).json({success:false,message:"Incorrect password!!"})
         }
 
-        const token = jwt.sign({id: isExist._id, email: isExist.email,role: isExist.role},process.env.JWT_SECRET,
+        const token = jwt.sign({
+            id: isExist._id,
+            email: isExist.email,
+            accountType: "user",
+            role: isExist.role
+            
+            },process.env.JWT_SECRET,
             {expiresIn:"1hr"}
         )
 
@@ -104,6 +110,7 @@ export const login = async (req,res) =>{
     user: {
         name: isExist.name,
         email: isExist.email,
+        accountType: "user",
         role: "user"
         }
     });
